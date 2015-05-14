@@ -28,6 +28,6 @@ module.exports = function(robot) {
   ];
 
   robot.hear(/jbaptistada/i, function(msg){
-    msg.send(msg.random(phrases).replace("#user#", msg.message.user.name));
+    msg.send(msg.random(phrases).replace("#user#", msg.message.user.real_name != undefined ? msg.message.user.real_name : msg.message.user.name));
   });
 };
