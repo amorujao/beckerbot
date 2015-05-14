@@ -21,7 +21,8 @@ module.exports = function(robot) {
     'estás um bocado lumberjack',
     'agora todos...',
     'dá cá um abraço',
-    'já não me amas :('
+    'já não me amas :(',
+    'tu não me fales assim!'
   ];
 
   robot.hear(/jbaptistada/i, function(msg){
