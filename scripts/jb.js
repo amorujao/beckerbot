@@ -27,6 +27,6 @@ module.exports = function(robot) {
   ];
 
   robot.hear(/jbaptistada/i, function(msg){
-    msg.send(msg.random(phrases).replace("#user#", msg.message.user));
+    msg.send(msg.random(phrases).replace("#user#", msg.message.user.name));
   });
 };
