@@ -16,10 +16,12 @@ module.exports = function(robot) {
     'share anyone?',
     'não, eu é que agradeço',
     'faz uma coisa...',
-    'smack the pitt!',
+    'Smack The Pt!',
     'a resposta é não.',
     'estás um bocado lumberjack',
     'agora todos...',
+    'dá cá um abraço',
+    'já não me amas :(',
     'tu não me fales assim!'
   ];
 
