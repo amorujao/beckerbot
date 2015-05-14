@@ -19,7 +19,8 @@ module.exports = function(robot) {
     'smack the pitt!',
     'a resposta é não.',
     'estás um bocado lumberjack',
-    'agora todos...'
+    'agora todos...',
+    'tu não me fales assim!'
   ];
 
   robot.hear(/jbaptistada/i, function(msg){
