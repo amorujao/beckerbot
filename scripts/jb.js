@@ -11,21 +11,22 @@
 //   hubot jbaptistada
 
 module.exports = function(robot) {
-
+  //user placeholder: "#user#"
   var phrases = [
-    'share anyone?',
+    'share, anyone?',
     'não, eu é que agradeço',
-    'faz uma coisa...',
-    'Smack The Pt!',
+    '#user#, faz uma coisa...',
+    'Smack The Pit!',
     'a resposta é não.',
-    'estás um bocado lumberjack',
+    'estás um bocado lumberjack, #user#',
     'agora todos...',
-    'dá cá um abraço',
-    'já não me amas :(',
-    'tu não me fales assim!'
+    'dá cá um abraço, #user#',
+    '#user#, já não me amas :(',
+    'tu não me fales assim, #user#!',
+    'aquele abraço, forte e sentido'
   ];
 
   robot.hear(/jbaptistada/i, function(msg){
-    msg.send(msg.random(phrases));
+    msg.send(msg.random(phrases).replace("#user#", msg.message.user.name));
   });
 };
