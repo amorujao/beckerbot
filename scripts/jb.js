@@ -23,7 +23,8 @@ module.exports = function(robot) {
     'dá cá um abraço, #user#',
     '#user#, já não me amas :(',
     'tu não me fales assim, #user#!',
-    'aquele abraço, forte e sentido'
+    'aquele abraço, forte e sentido',
+    'Something you gotta understand #user#: I don\'t care about you, and I sure don\'t care about your family.'
   ];
 
   robot.hear(/jbaptistada/i, function(msg){
