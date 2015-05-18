@@ -53,4 +53,10 @@ module.exports = function(robot) {
       msg.send("Smack The Pit!!");
     }
   });
+
+  robot.hear(/\bjavascript\b/i, function(msg) {
+    if (messageAllowed(msg)) {
+      msg.send("en-_habascript_");
+    }
+  });
 };
