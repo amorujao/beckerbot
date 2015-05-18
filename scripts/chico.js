@@ -60,7 +60,7 @@ module.exports = function(robot) {
     var hours = now.getHours();
     var minutes = now.getMinutes();
 
-    if (msg.message.text.search(/doente|sick|doctor/i) >= 0) {
+    if (msg.message.text.search(/doente|sick|medico|médico|doctor/i) >= 0) {
       sendMessage(msg, ["Um Jack Daniels resolve isso"]);
     } else if (msg.message.text.search(/\ball in\b/i) >= 0) {
       sendMessage(msg, poker);
@@ -80,7 +80,7 @@ module.exports = function(robot) {
     var hours = now.getHours();
     var minutes = now.getMinutes();
 
-    if (msg.message.text.search(/doente|sick|doctor/i) >= 0) {
+    if (msg.message.text.search(/doente|sick|medico|médico|doctor/i) >= 0) {
       sendMessage(msg, ["Um Jack Daniels resolve isso"]);
     } else if (hours >= 16 && hours < 18) {
       sendMessage(msg, out_early, 0.666);
