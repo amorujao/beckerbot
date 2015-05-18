@@ -47,8 +47,12 @@ module.exports = function(robot) {
     }
   }
 
+  function filterChannel(msg) {
+    return msg.message.user.room != "chico";
+  }
+
   robot.hear(/\bin\b/i, function(msg){
-    if (msg.message.user.room != "chico") {
+    if (filterChannel(msg)) {
       return;
     }
 
@@ -56,19 +60,19 @@ module.exports = function(robot) {
     var hours = now.getHours();
     var minutes = now.getMinutes();
 
-    if (msg.message.text.search(/doente|sick/i) >= 0) {
+    if (msg.message.text.search(/doente|sick|doctor/i) >= 0) {
       sendMessage(msg, ["Um Jack Daniels resolve isso"]);
     } else if (msg.message.text.search(/\ball in\b/i) >= 0) {
       sendMessage(msg, poker);
     } else if (hours >= 10 && hours < 12) {
-      sendMessage(msg, in_late, 0.5);
+      sendMessage(msg, in_late, 0.666);
     } else if (hours < 10) {
       sendMessage(msg, in_normal, 0.1);
     }
   });
 
   robot.hear(/\bout\b/i, function(msg) {
-    if (msg.message.user.room != "chico") {
+    if (filterChannel(msg)) {
       return;
     }
 
@@ -76,12 +80,12 @@ module.exports = function(robot) {
     var hours = now.getHours();
     var minutes = now.getMinutes();
 
-    if (msg.message.text.search(/doente|sick/i) >= 0) {
+    if (msg.message.text.search(/doente|sick|doctor/i) >= 0) {
       sendMessage(msg, ["Um Jack Daniels resolve isso"]);
     } else if (hours >= 16 && hours < 18) {
-      sendMessage(msg, out_early, 0.5);
+      sendMessage(msg, out_early, 0.666);
     } else if (hours >= 18) {
-      sendMessage(msg, out_normal, 0.1);
+      sendMessage(msg, out_normal, 0.2);
     }
   });
 };
