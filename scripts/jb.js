@@ -47,4 +47,10 @@ module.exports = function(robot) {
       msg.send("não, eu é que agradeço");
     }
   });
+
+  robot.hear(/\bpit(t?)\b/i, function(msg) {
+    if (messageAllowed(msg)) {
+      msg.send("Smack The Pit!!");
+    }
+  });
 };
