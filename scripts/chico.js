@@ -89,7 +89,7 @@ module.exports = function(robot) {
     }
   });
 
-  robot.hear(/\bI'll be back|Ill be back\b/i, function(msg) {
+  robot.hear(/i.?ll be back/i, function(msg) {
     if (filterChannel(msg)) {
       return;
     }
