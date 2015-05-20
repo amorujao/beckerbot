@@ -48,7 +48,7 @@ module.exports = function(robot) {
   }
 
   function filterChannel(msg) {
-    return msg.message.user.room != "chico" && msg.message.user.room != "hubot";
+    return msg.message.user.room != "chico" && msg.message.user.room != "hubot" && msg.message.user.room != 'andre-tests' && msg.message.user.room != 'Shell';
   }
 
   robot.hear(/\bin\b/i, function(msg){
@@ -56,7 +56,7 @@ module.exports = function(robot) {
       return;
     }
 
-    var now = new Date(new Date().toLocaleString("en-US", {timeZone: "Europe/Lisbon"}));
+    var now = new Date();//new Date().toLocaleString("en-US", {timeZone: "Europe/Lisbon"}));
     var hours = now.getHours();
     var minutes = now.getMinutes();
 
@@ -64,10 +64,10 @@ module.exports = function(robot) {
       sendMessage(msg, ["Um Jack Daniels resolve isso"]);
     } else if (msg.message.text.search(/\ball in\b/i) >= 0) {
       sendMessage(msg, poker);
-    } else if (hours >= 10 && hours < 12) {
-      sendMessage(msg, in_late, 0.666);
-    } else if (hours < 10) {
-      sendMessage(msg, in_normal, 0.1);
+    } else if (hours >= 9 && hours < 11) {
+      sendMessage(msg, in_late, 1);
+    } else if (hours < 9) {
+      sendMessage(msg, in_normal, 0.2);
     }
   });
 
@@ -76,16 +76,16 @@ module.exports = function(robot) {
       return;
     }
 
-    var now = new Date(new Date().toLocaleString("en-US", {timeZone: "Europe/Lisbon"}));
+    var now = new Date();//new Date().toLocaleString("en-US", {timeZone: "Europe/Lisbon"}));
     var hours = now.getHours();
     var minutes = now.getMinutes();
 
     if (msg.message.text.search(/doente|sick|medico|médico|doctor/i) >= 0) {
       sendMessage(msg, ["Um Jack Daniels resolve isso"]);
-    } else if (hours >= 16 && hours < 18) {
-      sendMessage(msg, out_early, 0.666);
-    } else if (hours >= 18) {
-      sendMessage(msg, out_normal, 0.2);
+    } else if (hours >= 15 && hours < 17) {
+      sendMessage(msg, out_early, 1);
+    } else if (hours >= 17) {
+      sendMessage(msg, out_normal, 0.25);
     }
   });
 
