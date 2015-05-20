@@ -48,7 +48,7 @@ module.exports = function(robot) {
   }
 
   function filterChannel(msg) {
-    return msg.message.user.room != "chico";
+    return msg.message.user.room != "chico" && msg.message.user.room != "hubot";
   }
 
   robot.hear(/\bin\b/i, function(msg){
@@ -87,5 +87,13 @@ module.exports = function(robot) {
     } else if (hours >= 18) {
       sendMessage(msg, out_normal, 0.2);
     }
+  });
+
+  robot.hear(/\bI'll be back|Ill be back\b/i, function(msg) {
+    if (filterChannel(msg)) {
+      return;
+    }
+
+    sendMessage(msg, ["http://media.giphy.com/media/JDKxRN0Bvmm2c/giphy.gif", "http://www.reactiongifs.us/wp-content/uploads/2013/06/ill_be_back_terminator.gif"]);
   });
 };
