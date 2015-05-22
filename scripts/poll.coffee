@@ -13,10 +13,12 @@
 #   hubot (end|stop|close) poll - End current poll and show results
 #   hubot vote <number> - Cast your vote
 #   hubot previous poll - Previous poll results
+#   hubot poll status - Show current poll results
 #
 # Notes:
 #   $ hubot poll How cool is that? -a Amazeballz, Very Nice, Nice, Boring
 #   $ hubot vote 1
+#   $ hubot poll status
 #   $ hubot end poll
 #   $ hubot previous poll
 #
@@ -33,6 +35,7 @@ class Poll
     @robot.respond /(end|stop|close) poll/i, this.endPoll
     @robot.respond /vote ([0-9]*)/i, this.vote
     @robot.respond /previous poll/i, this.showPreviousPoll
+    @robot.respond /poll status/i, this.showPollStatus
 
   getUser: (msg) ->
     msg.message.user
@@ -67,6 +70,14 @@ class Poll
     msg.send """Here are the results for “#{@previousPoll.question}”:
     #{this.printResults(@previousPoll)}
     This poll was brought to you by #{@previousPoll.user.name}
+    """
+  
+  showPollStatus: (msg) =>
+    return msg.send('There’s currently no poll.') unless @poll
+    
+    msg.send """The current poll results for “#{@poll.question}” are:
+    #{this.printResults(@poll)}
+    This poll is being brought to you by #{@poll.user.name}
     """
 
   # Ansers management
