@@ -8,25 +8,56 @@
 //   None
 //
 // Commands:
-//   hubot jbaptistada
+//   None
 
 module.exports = function(robot) {
   //user placeholder: "#user#"
   var phrases = [
-    'share, anyone?',
-    'não, eu é que agradeço',
-    '#user#, faz uma coisa...',
+    'Share, anyone?',
     'Smack The Pit!',
-    'a resposta é não.',
-    'estás um bocado lumberjack, #user#',
-    'agora todos...',
-    'dá cá um abraço, #user#',
+    'A resposta é não.',
+    'Estás um bocado lumberjack, #user#',
+    'Agora todos...',
+    'Dá cá um abraço, #user#',
     '#user#, já não me amas :(',
-    'tu não me fales assim, #user#!',
-    'aquele abraço, forte e sentido'
+    'Tu não me fales assim, #user#!',
+    'Aquele abraço, forte e sentido',
+    'Something you gotta understand #user#: I don\'t care about you, and I sure don\'t care about your family.',
+    '#user# I have two words for you, and the second one is "you"',
+    'Oh my goodness dot com!'
   ];
 
-  robot.hear(/jbaptistada/i, function(msg){
-    msg.send(msg.random(phrases).replace("#user#", msg.message.user.name));
+  function messageAllowed(msg) {
+    return msg.message.user.room != "general";
+  }
+
+  robot.hear(/jbaptistada/i, function(msg) {
+    if (messageAllowed(msg)) {
+      msg.send(msg.random(phrases).replace("#user#", msg.message.user.real_name != undefined ? msg.message.user.real_name : msg.message.user.name));
+    }
+  });
+
+  robot.hear(/peço desculpa/i, function(msg) {
+    if (messageAllowed(msg)) {
+      msg.send("não, eu é que peço desculpa");
+    }
+  });
+
+  robot.hear(/obrigado/i, function(msg) {
+    if (messageAllowed(msg)) {
+      msg.send("não, eu é que agradeço");
+    }
+  });
+
+  robot.hear(/\bpit(t?)\b/i, function(msg) {
+    if (messageAllowed(msg)) {
+      msg.send("Smack The Pit!!");
+    }
+  });
+
+  robot.hear(/\bjavascript\b/i, function(msg) {
+    if (messageAllowed(msg)) {
+      msg.send("en-_habascript_");
+    }
   });
 };
