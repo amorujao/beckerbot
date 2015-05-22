@@ -82,7 +82,7 @@ module.exports = function(robot) {
     sendMessage(msg, ["não, eu é que peço desculpa"]);
   });
 
-  robot.hear(/obrigado/i, function(msg) {
+  robot.hear(/\bobrigado|agrade(c|ç)o\b/i, function(msg) {
     sendMessage(msg, ["não, eu é que agradeço"]);
   });
 

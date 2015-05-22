@@ -94,9 +94,11 @@ module.exports = function(robot) {
 
     if (text.search(/doente|sick|medico|médico|doctor/i) >= 0) {
       sendMessage(msg, jd);
+      return;
     } else if (text.search(/\ball in\b/i) >= 0) {
-      // TODO: poker face, sleep 3 seconds, then post the following
-      sendMessage(msg, poker);
+      sendMessage(msg, ["http://www.pokerdictionary.net/wp-content/uploads/2013/01/poker_face.png"]);
+      setTimeout(function(){ sendMessage(msg, poker); }, 4000);
+      return;
     }
 
     var now = new Date();
