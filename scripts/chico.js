@@ -55,7 +55,12 @@ module.exports = function(robot) {
       odds = 1;
     }
     if (Math.random() <= odds) {
-      message = msg.random(options).replace("#user#", msg.message.user.real_name != undefined ? msg.message.user.real_name : msg.message.user.name);
+      var user = msg.message.user.name;
+      if (msg.message.user.real_name != undefined) {
+        var names = msg.message.user.real_name.split(" ");
+        user = names[0];
+      }
+      message = msg.random(options).replace("#user#", user);
       msg.send(message);
     }
   }
