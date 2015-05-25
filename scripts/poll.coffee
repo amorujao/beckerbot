@@ -35,7 +35,7 @@ class Poll
     @robot.respond /(end|stop|close) poll/i, this.endPoll
     @robot.respond /vote ([0-9]*)/i, this.vote
     @robot.respond /previous poll/i, this.showPreviousPoll
-    # @robot.respond /poll status/i, this.showPollStatus
+    @robot.respond /poll status/i, this.showPollStatus
 
   getUser: (msg) ->
     msg.message.user
@@ -57,7 +57,7 @@ class Poll
     return msg.send('There’s currently no poll to end.') unless @poll
 
     msg.send """Here are the results for “#{@poll.question}”:
-    #{this.printResults(@poll)}
+    #{this.printResults(@poll, true)}
     This poll was brought to you by #{@poll.user.name}
     """
 
@@ -68,7 +68,7 @@ class Poll
     return msg.send('There’s currently no previous poll.') unless @previousPoll
 
     msg.send """Here are the results for “#{@previousPoll.question}”:
-    #{this.printResults(@previousPoll)}
+    #{this.printResults(@previousPoll, true)}
     This poll was brought to you by #{@previousPoll.user.name}
     """
   
@@ -76,7 +76,7 @@ class Poll
     return msg.send('There’s currently no poll.') unless @poll
     
     msg.send """The current poll results for “#{@poll.question}” are:
-    #{this.printResults(@poll)}
+    #{this.printResults(@poll, false)}
     This poll is being brought to you by #{@poll.user.name}
     """
 
@@ -87,11 +87,12 @@ class Poll
   printAnswers: ->
     ("#{i+1}. #{answer.text}" for answer, i in @poll.answers).join("\n")
 
-  printResults: (poll) ->
-    poll.answers.sort (a, b) ->
-      return 1 if (a.votes < b.votes)
-      return -1 if (a.votes > b.votes)
-      0
+  printResults: (poll, sort_answers) ->
+    if(sort_answers)
+      poll.answers.sort (a, b) ->
+        return 1 if (a.votes < b.votes)
+        return -1 if (a.votes > b.votes)
+        0
 
     results = ''
     results += ("#{answer.text} (#{answer.votes})" for answer in poll.answers).join("\n")
