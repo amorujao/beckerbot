@@ -79,7 +79,7 @@ module.exports = function(robot) {
   });
   
   robot.hear(/jbatistada/i, function(msg) {
-    sendMessage(msg, ["#user# aprende a escrever"]]);
+    sendMessage(msg, ["#user# aprende a escrever"]);
   });
 
   robot.hear(/rgomesada/i, function(msg) {
