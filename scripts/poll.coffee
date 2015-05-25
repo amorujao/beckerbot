@@ -35,7 +35,7 @@ class Poll
     @robot.respond /(end|stop|close) poll/i, this.endPoll
     @robot.respond /vote ([0-9]*)/i, this.vote
     @robot.respond /previous poll/i, this.showPreviousPoll
-    @robot.respond /poll status/i, this.showPollStatus
+    # @robot.respond /poll status/i, this.showPollStatus
 
   getUser: (msg) ->
     msg.message.user
