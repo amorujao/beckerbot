@@ -38,7 +38,9 @@ module.exports = function(robot) {
 
   // rgomesada
   var rg = [
-    'Isso é piroca'
+    'Isso é piroca',
+    'Isso é raça piroca',
+    'Na ponta da piroca!'
   ];
 
   var unknown = [
