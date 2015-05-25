@@ -49,7 +49,7 @@ class Poll
     @poll = { user: user, question: msg.match[1], answers: answers, cancelled: 0, voters: {} }
 
     msg.send """#{user.name} asked: #{@poll.question}
-    0. [Cancel my vote]
+    0. [Decline to vote]
     #{this.printAnswers()}
     """
 
@@ -96,7 +96,7 @@ class Poll
 
     results = ''
     results += ("#{answer.text} (#{answer.votes})" for answer in poll.answers).join("\n")
-    results += "\n\nOut of #{Object.keys(poll.voters).length} total voters, #{poll.cancelled} canceled their vote."
+    results += "\n\nOut of #{Object.keys(poll.voters).length} total voters, #{poll.cancelled} declined to vote."
 
   # Vote management
   vote: (msg) =>
@@ -107,21 +107,20 @@ class Poll
     return msg.send('Sorry, there’s no pending poll at the moment.') unless @poll
     return msg.send("There are only #{@poll.answers.length} answers.") if number > @poll.answers.length
 
-    # User already voted
+    # User already voted (no problem, change it!)
+    changingVote = false
     if (userAnswer = @poll.voters[user.name]) != undefined
-      sorry = "Sorry #{user.name}, but you’ve already "
+      changingVote = true
       if userAnswer is 0
-        sorry += 'cancelled your vote for this poll.'
+        @poll.cancelled--
       else
-        sorry += "voted for “#{userAnswer}. #{@poll.answers[userAnswer - 1].text}” for this poll."
-
-      return msg.send(sorry)
+        @poll.answers[number - 1].votes--
 
     # Save user vote
     @poll.voters[user.name] = number
     votersCount = Object.keys(@poll.voters).length
 
-    # Cancel vote
+    # Decline vote
     if number is 0
       @poll.cancelled++
       msg.send("#{user.name} decided not to vote.")
@@ -130,12 +129,14 @@ class Poll
     else
       votedAnswer = @poll.answers[number - 1]
       votedAnswer.votes++
-      msg.send "#{user.name} voted “#{votedAnswer.text}”"
+      if changingVote
+        msg.send "#{user.name} changed vote to “#{votedAnswer.text}”"
+      else
+        msg.send "#{user.name} voted “#{votedAnswer.text}”"
 
-    # Close poll if all users have voted
-    # return if votersCount < @robot.brain.data.users.length - 1
-    # msg.send "It looks like all users casted their vote. Automatically closing this poll."
-    # this.endPoll(msg)
+    # Check if all users have voted
+    return if votersCount < @robot.brain.data.users.length - 1
+    msg.send "It looks like all users casted their vote. The poll can be closed."
 
 module.exports = (robot) ->
   new Poll(robot)
