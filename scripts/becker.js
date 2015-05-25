@@ -47,6 +47,14 @@ module.exports = function(robot) {
     'Há aqui um galhenz'
   ];
 
+  var lulz = [
+    'lol',
+    'lolol',
+    'lmao',
+    'rotfl',
+    'http://media.giphy.com/media/reJOGQ43nNeGk/giphy.gif'
+  ];
+
   function sendMessage(msg, options, odds) {
     if (filterChannel(msg)) {
       return;
@@ -110,4 +118,38 @@ module.exports = function(robot) {
   robot.hear(/\bjavascript\b/i, function(msg) {
     sendMessage(msg, ["en-_habascript_"]);
   });
+
+  robot.hear(/\blo(l|o)+|lmao|rotfl\b/i, function(msg) {
+
+    var now = new Date().getTime();
+    var room = msg.message.room;
+    var user = msg.message.user.name;
+
+    var last_lol_time = msg.robot.brain.get("last_lol_time");
+    var last_lol_room = msg.robot.brain.get("last_lol_room");
+    var last_lol_user = msg.robot.brain.get("last_lol_user");
+
+    msg.robot.brain.set("last_lol_time", now);
+    msg.robot.brain.set("last_lol_room", room);
+    msg.robot.brain.set("last_lol_user", user);
+
+    var silent = msg.robot.brain.get("no_lol_until");
+
+    if (silent != undefined && now < silent) {
+      return;
+    }
+
+    // reply if the last lol happened in the same room, in the last 5 seconds, and it was said by a different user
+    if (last_lol_time != undefined &&
+        (now - last_lol_time) < 5000 &&
+        last_lol_room == room &&
+        last_lol_user != user) {
+
+      sendMessage(msg, lulz);
+
+      // don't lol again in the next 30 seconds
+      msg.robot.brain.set("no_lol_until", now + 30000);
+    }
+  });
+
 };
