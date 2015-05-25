@@ -77,6 +77,10 @@ module.exports = function(robot) {
   robot.hear(/jbaptistada/i, function(msg) {
     sendMessage(msg, jb);
   });
+  
+  robot.hear(/jbatistada/i, function(msg) {
+    sendMessage(msg, ["#user# aprende a escrever"]]);
+  });
 
   robot.hear(/rgomesada/i, function(msg) {
     sendMessage(msg, rg);
