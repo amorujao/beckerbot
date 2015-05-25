@@ -94,6 +94,11 @@ module.exports = function(robot) {
     sendMessage(msg, ["não, eu é que agradeço"]);
   });
 
+  robot.hear(/\bd(a|á) c(a|á) um abra(ç|c)o$\b/i, function(msg) {
+    // TODO: add alternative of looking up "bro hug" or similar on Google Images and posting the URL
+    sendMessage(msg, ["forte e sentido"]);
+  });
+
   robot.hear(/\b(pit(t?)|smack)\b/i, function(msg) {
     sendMessage(msg, ["Smack the Pit!!"]);
   });
