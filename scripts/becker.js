@@ -17,6 +17,7 @@ module.exports = function(robot) {
   var jb = [
     'Share, anyone?',
     'Smack The Pit!',
+    'Como é que é, smack?',
     'A resposta é não.',
     'Estás um bocado _lumberjack_ #user#',
     'Agora todos...',
@@ -31,12 +32,17 @@ module.exports = function(robot) {
 
   // csilvada
   var cs = [
-    'Fuckanizer!'
+    'Fuckanizer!',
+    'Está como o aço'
   ];
 
   // rgomesada
   var rg = [
     'Isso é piroca'
+  ];
+
+  var unknown = [
+    'Há aqui um galhenz'
   ];
 
   function sendMessage(msg, options, odds) {
@@ -62,7 +68,7 @@ module.exports = function(robot) {
   }
 
   robot.respond(/\bquote|hit( me)?\b/i, function(msg) {
-    var all = jb.concat(rg, cs);
+    var all = jb.concat(rg, cs, unknown);
     sendMessage(msg, all);
   });
 
