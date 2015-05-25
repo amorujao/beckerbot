@@ -114,7 +114,7 @@ class Poll
       if userAnswer is 0
         @poll.cancelled--
       else
-        @poll.answers[number - 1].votes--
+        @poll.answers[userAnswer - 1].votes--
 
     # Save user vote
     @poll.voters[user.name] = number
