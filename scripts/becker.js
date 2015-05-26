@@ -139,9 +139,9 @@ module.exports = function(robot) {
       return;
     }
 
-    // reply if the last lol happened in the same room, in the last 5 seconds, and it was said by a different user
+    // reply if the last lol happened in the same room, in the last 20 seconds, and it was said by a different user
     if (last_lol_time != undefined &&
-        (now - last_lol_time) < 5000 &&
+        (now - last_lol_time) < 20000 &&
         last_lol_room == room &&
         last_lol_user != user) {
 
