@@ -28,10 +28,6 @@
 class Poll
 
   constructor: (@robot) ->
-    @allUsers = []
-    for k,user of @robot.brain.data.users
-      @allUsers.push(user)
-
     @poll = null
     @previousPoll = null
 
@@ -58,6 +54,10 @@ class Poll
 
     user = this.getUser(msg)
     @poll = { user: user, question: msg.match[1], answers: answers, cancelled: 0, voters: {} }
+
+    @poll.allUsers = []
+    for k,u of @robot.brain.data.users
+      @poll.allUsers.push(u)
 
     msg.send """#{user.name} asked: #{@poll.question}
     0. [Decline to vote]
@@ -106,8 +106,8 @@ class Poll
         0
 
     non_voters = []
-    for u in @allUsers
-      if @poll.voters[u.name] == undefined
+    for u in poll.allUsers
+      if @poll.voters == undefined or @poll.voters[u.name] == undefined
         non_voters.push(u)
 
     results = ''
@@ -118,7 +118,7 @@ class Poll
       for u, idx in non_voters
         if idx > 0
           results += ", "
-        results += getUserDisplayName(u)
+        results += this.getUserDisplayName(u)
     return results
 
   # Vote management
