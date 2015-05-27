@@ -42,9 +42,9 @@ class Poll
 
   getUserDisplayName: (user) ->
     name = user.name
-    if user.real_name
-      names =user.real_name.split(" ")
-      name = names[0]
+#    if user.real_name
+#      names =user.real_name.split(" ")
+#      name = names[0]
     return name
 
   # Poll management
@@ -57,7 +57,8 @@ class Poll
 
     @poll.allUsers = []
     for k,u of @robot.brain.data.users
-      @poll.allUsers.push(u)
+      @if u.username != "bbot"
+        @poll.allUsers.push(u)
 
     msg.send """#{user.name} asked: #{@poll.question}
     0. [Decline to vote]
