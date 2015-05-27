@@ -31,7 +31,7 @@ class Poll
     @allUsers = []
     for k,user of @robot.brain.data.users
       @allUsers.push(user)
-    
+
     @poll = null
     @previousPoll = null
 
@@ -43,12 +43,12 @@ class Poll
 
   getUser: (msg) ->
     msg.message.user
-    
+
   getUserDisplayName: (user) ->
     name = user.name
-      if user.real_name != undefined
-        names =user.real_name.split(" ")
-        name = names[0]
+    if user.real_name
+      names =user.real_name.split(" ")
+      name = names[0]
     return name
 
   # Poll management
@@ -82,10 +82,10 @@ class Poll
     #{this.printResults(@previousPoll, true)}
     This poll was brought to you by #{@previousPoll.user.name}
     """
-  
+
   showPollStatus: (msg) =>
     return msg.send('There’s currently no poll.') unless @poll
-    
+
     msg.send """The current poll results for “#{@poll.question}” are:
     #{this.printResults(@poll, false)}
     This poll is being brought to you by #{@poll.user.name}
@@ -104,10 +104,10 @@ class Poll
         return 1 if (a.votes < b.votes)
         return -1 if (a.votes > b.votes)
         0
-        
+
     non_voters = []
     for u in @allUsers
-      if @poll.voters.indexOf(u.name) < 0
+      if @poll.voters[u.name] == undefined
         non_voters.push(u)
 
     results = ''
@@ -119,6 +119,7 @@ class Poll
         if idx > 0
           results += ", "
         results += getUserDisplayName(u)
+    return results
 
   # Vote management
   vote: (msg) =>
