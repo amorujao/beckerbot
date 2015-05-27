@@ -57,7 +57,7 @@ class Poll
 
     @poll.allUsers = []
     for k,u of @robot.brain.data.users
-      if u.username != "bbot"
+      if u.email_address != undefined and u.email_address != null
         @poll.allUsers.push(u)
 
     msg.send """#{user.name} asked: #{@poll.question}
