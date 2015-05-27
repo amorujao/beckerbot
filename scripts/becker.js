@@ -44,7 +44,8 @@ module.exports = function(robot) {
   ];
 
   var unknown = [
-    'Há aqui um galhenz'
+    'Há aqui um galhenz',
+    '#user# aquele abraço'
   ];
 
   var lulz = [
