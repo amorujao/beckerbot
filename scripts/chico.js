@@ -34,7 +34,8 @@ module.exports = function(robot) {
     '#user# espera, preciso de falar contigo...',
     'bebe mais um copo',
     '#user# precisava de falar contigo...',
-    ':wave:'
+    ':wave:',
+    'forte abraço'
   ];
   var out_lunch = [
     'bom almoço',
