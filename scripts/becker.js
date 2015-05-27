@@ -1,5 +1,5 @@
 // Description:
-//   catch phrases from JB
+//   Random bits of fun @ Becker
 //
 // Dependencies:
 //   None
