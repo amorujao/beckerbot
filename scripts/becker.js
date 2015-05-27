@@ -17,6 +17,7 @@ module.exports = function(robot) {
   var jb = [
     'Share, anyone?',
     'Smack The Pit!',
+    'Como é que é, smack?',
     'A resposta é não.',
     'Estás um bocado _lumberjack_ #user#',
     'Agora todos...',
@@ -31,12 +32,27 @@ module.exports = function(robot) {
 
   // csilvada
   var cs = [
-    'Fuckanizer!'
+    'Fuckanizer!',
+    'Está como o aço'
   ];
 
   // rgomesada
   var rg = [
-    'Isso é piroca'
+    'Isso é piroca',
+    'Isso é raça piroca',
+    'Na ponta da piroca!'
+  ];
+
+  var unknown = [
+    'Há aqui um galhenz'
+  ];
+
+  var lulz = [
+    'lol',
+    'lolol',
+    'lmao',
+    'rotfl',
+    'http://media.giphy.com/media/reJOGQ43nNeGk/giphy.gif'
   ];
 
   function sendMessage(msg, options, odds) {
@@ -62,12 +78,16 @@ module.exports = function(robot) {
   }
 
   robot.respond(/\bquote|hit( me)?\b/i, function(msg) {
-    var all = jb.concat(rg, cs);
+    var all = jb.concat(rg, cs, unknown);
     sendMessage(msg, all);
   });
 
   robot.hear(/jbaptistada/i, function(msg) {
     sendMessage(msg, jb);
+  });
+  
+  robot.hear(/jbatistada/i, function(msg) {
+    sendMessage(msg, ["#user# aprende a escrever"]);
   });
 
   robot.hear(/rgomesada/i, function(msg) {
@@ -86,6 +106,11 @@ module.exports = function(robot) {
     sendMessage(msg, ["não, eu é que agradeço"]);
   });
 
+  robot.hear(/\bd(a|á) c(a|á) um abra(ç|c)o$\b/i, function(msg) {
+    // TODO: add alternative of looking up "bro hug" or similar on Google Images and posting the URL
+    sendMessage(msg, ["forte e sentido"]);
+  });
+
   robot.hear(/\b(pit(t?)|smack)\b/i, function(msg) {
     sendMessage(msg, ["Smack the Pit!!"]);
   });
@@ -93,4 +118,38 @@ module.exports = function(robot) {
   robot.hear(/\bjavascript\b/i, function(msg) {
     sendMessage(msg, ["en-_habascript_"]);
   });
+
+  robot.hear(/\blo(l|o)+|lmao|rotfl\b/i, function(msg) {
+
+    var now = new Date().getTime();
+    var room = msg.message.room;
+    var user = msg.message.user.name;
+
+    var last_lol_time = msg.robot.brain.get("last_lol_time");
+    var last_lol_room = msg.robot.brain.get("last_lol_room");
+    var last_lol_user = msg.robot.brain.get("last_lol_user");
+
+    msg.robot.brain.set("last_lol_time", now);
+    msg.robot.brain.set("last_lol_room", room);
+    msg.robot.brain.set("last_lol_user", user);
+
+    var silent = msg.robot.brain.get("no_lol_until");
+
+    if (silent != undefined && now < silent) {
+      return;
+    }
+
+    // reply if the last lol happened in the same room, in the last 20 seconds, and it was said by a different user
+    if (last_lol_time != undefined &&
+        (now - last_lol_time) < 20000 &&
+        last_lol_room == room &&
+        last_lol_user != user) {
+
+      sendMessage(msg, lulz);
+
+      // don't lol again in the next 30 seconds
+      msg.robot.brain.set("no_lol_until", now + 30000);
+    }
+  });
+
 };

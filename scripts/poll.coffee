@@ -33,9 +33,9 @@ class Poll
 
     @robot.respond /poll (.*) -a (.*)/i, this.createPoll
     @robot.respond /(end|stop|close) poll/i, this.endPoll
-    @robot.respond /vote ([0-9]*)/i, this.vote
+    @robot.respond /(v|b)?ote ([0-9]*)/i, this.vote
     @robot.respond /previous poll/i, this.showPreviousPoll
-    @robot.respond /poll status/i, this.showPollStatus
+    @robot.respond /poll( status)?$/i, this.showPollStatus
 
   getUser: (msg) ->
     msg.message.user
@@ -100,7 +100,7 @@ class Poll
 
   # Vote management
   vote: (msg) =>
-    number = parseInt(msg.match[1])
+    number = parseInt(msg.match[2])
     user = this.getUser(msg)
 
     # Errors
@@ -135,8 +135,8 @@ class Poll
         msg.send "#{user.name} voted “#{votedAnswer.text}”"
 
     # Check if all users have voted
-    return if votersCount < @robot.brain.data.users.length - 1
-    msg.send "It looks like all users casted their vote. The poll can be closed."
+    #return if votersCount < @robot.brain.data.users.length - 1
+    #msg.send "It looks like all users casted their vote. The poll can be closed."
 
 module.exports = (robot) ->
   new Poll(robot)
