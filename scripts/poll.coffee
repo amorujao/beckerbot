@@ -28,6 +28,10 @@
 class Poll
 
   constructor: (@robot) ->
+    @allUsers = []
+    for k,user of @robot.brain.data.users
+      @allUsers.push(user)
+
     @poll = null
     @previousPoll = null
 
@@ -39,6 +43,13 @@ class Poll
 
   getUser: (msg) ->
     msg.message.user
+
+  getUserDisplayName: (user) ->
+    name = user.name
+    if user.real_name
+      names =user.real_name.split(" ")
+      name = names[0]
+    return name
 
   # Poll management
   createPoll: (msg) =>
@@ -71,10 +82,10 @@ class Poll
     #{this.printResults(@previousPoll, true)}
     This poll was brought to you by #{@previousPoll.user.name}
     """
-  
+
   showPollStatus: (msg) =>
     return msg.send('There’s currently no poll.') unless @poll
-    
+
     msg.send """The current poll results for “#{@poll.question}” are:
     #{this.printResults(@poll, false)}
     This poll is being brought to you by #{@poll.user.name}
@@ -94,9 +105,21 @@ class Poll
         return -1 if (a.votes > b.votes)
         0
 
+    non_voters = []
+    for u in @allUsers
+      if @poll.voters[u.name] == undefined
+        non_voters.push(u)
+
     results = ''
     results += ("#{answer.text} (#{answer.votes})" for answer in poll.answers).join("\n")
     results += "\n\nOut of #{Object.keys(poll.voters).length} total voters, #{poll.cancelled} declined to vote."
+    if non_voters.length > 0
+      results += "\nUsers who haven't voted yet: "
+      for u, idx in non_voters
+        if idx > 0
+          results += ", "
+        results += getUserDisplayName(u)
+    return results
 
   # Vote management
   vote: (msg) =>
