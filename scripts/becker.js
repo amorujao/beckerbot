@@ -27,7 +27,8 @@ module.exports = function(robot) {
     'Aquele abraço, forte e sentido',
     'Something you gotta understand #user#: I don\'t care about you, and I sure don\'t care about your family.',
     '#user# I have two words for you, and the second one is "you"',
-    'Oh my goodness dot com!'
+    'Oh my goodness dot com!',
+    'Não percebi'
   ];
 
   // csilvada
