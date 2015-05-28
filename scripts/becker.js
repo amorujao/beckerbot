@@ -1,5 +1,5 @@
 // Description:
-//   catch phrases from JB
+//   Random bits of fun @ Becker
 //
 // Dependencies:
 //   None
@@ -44,7 +44,8 @@ module.exports = function(robot) {
   ];
 
   var unknown = [
-    'Há aqui um galhenz'
+    'Há aqui um galhenz',
+    '#user# aquele abraço'
   ];
 
   var lulz = [
