@@ -21,13 +21,10 @@ module.exports = function(robot) {
     'A resposta é não.',
     'Estás um bocado _lumberjack_ #user#',
     'Agora todos...',
-    'Dá cá um abraço, #user#',
     '#user#, já não me amas :(',
     'Tu não me fales assim, #user#!',
-    'Aquele abraço, forte e sentido',
     'Something you gotta understand #user#: I don\'t care about you, and I sure don\'t care about your family.',
-    '#user# I have two words for you, and the second one is "you"',
-    'Oh my goodness dot com!'
+    '#user# I have two words for you, and the second one is "you"'
   ];
 
   // csilvada
@@ -43,9 +40,13 @@ module.exports = function(robot) {
     'Na ponta da piroca!'
   ];
 
-  var unknown = [
+  // phrases used by more than one person
+  var misc = [
     'Há aqui um galhenz',
-    '#user# aquele abraço'
+    '#user# aquele abraço',
+    'Dá cá um abraço, #user#',
+    'Aquele abraço, forte e sentido',
+    'Oh my goodness dot com!'
   ];
 
   var lulz = [
@@ -55,6 +56,10 @@ module.exports = function(robot) {
     'rotfl',
     'http://media.giphy.com/media/reJOGQ43nNeGk/giphy.gif'
   ];
+
+  function filterChannel(msg) {
+    return msg.message.user.room == "general";
+  }
 
   function sendMessage(msg, options, odds) {
     if (filterChannel(msg)) {
@@ -74,12 +79,8 @@ module.exports = function(robot) {
     }
   }
 
-  function filterChannel(msg) {
-    return msg.message.user.room == "general";
-  }
-
   robot.respond(/\bquote|hit( me)?\b/i, function(msg) {
-    var all = jb.concat(rg, cs, unknown);
+    var all = misc.concat(jb, rg, cs);
     sendMessage(msg, all);
   });
 
@@ -99,7 +100,7 @@ module.exports = function(robot) {
     sendMessage(msg, cs);
   });
 
-  robot.hear(/peço desculpa/i, function(msg) {
+  robot.hear(/\bpeço desculpa\b/i, function(msg) {
     sendMessage(msg, ["não, eu é que peço desculpa"]);
   });
 
@@ -112,7 +113,7 @@ module.exports = function(robot) {
     sendMessage(msg, ["forte e sentido"]);
   });
 
-  robot.hear(/\b(pit(t?)|smack)\b/i, function(msg) {
+  robot.hear(/\b(smack|pit(t?))\b/i, function(msg) {
     sendMessage(msg, ["Smack the Pit!!"]);
   });
 
@@ -120,7 +121,7 @@ module.exports = function(robot) {
     sendMessage(msg, ["en-_habascript_"]);
   });
 
-  robot.hear(/\blo(l|o)+|lmao|rotfl\b/i, function(msg) {
+  robot.hear(/\blo(l|o)+|lmao|rotfl(o|l)+\b/i, function(msg) {
 
     var now = new Date().getTime();
     var room = msg.message.room;
