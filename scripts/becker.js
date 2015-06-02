@@ -57,6 +57,16 @@ module.exports = function(robot) {
     'http://media.giphy.com/media/reJOGQ43nNeGk/giphy.gif'
   ];
 
+  var kungfury = [
+    "Kung Fury: _You don't need that spine._ \n[Grabs Nazi soldier by the head and rips out his spine]\n _It's holding you back._",
+    "Kung Fury: _I'm disarming you._ [rips Nazi soldier's arm off]",
+    "Hacker Man: _Wait a minute. Using an RX modulator, I might be able to conduct a mainframe cell layer and hack you into the download._ \nKung Fury: _What the hell does that mean?_ \nHacker Man: _It means that with the right computer algorithms, I can hack you back in time. Just like a time machine._",
+    "Kung Fury: _Fuck! That's a laser raptor. I thought they went extinct thousands of years ago._",
+    "Private Lahmstache: _Where did the tank go?_ \n[Kung Fury holds the tank upward from the barrel and squashes the two Nazi soldiers with it]\nKung Fury: _Tank you._",
+    "Thor: _Behold - it is me, Thor. Son of Odin and protector of mankind. Check out my pecs._",
+    "Kung Fury: _Knock knock!_ \nKung-Fu Master: _Who's there?_ \nKung Fury: _Knu...ckles._"
+  ];
+
   function filterChannel(msg) {
     return msg.message.user.room == "general";
   }
@@ -154,4 +164,7 @@ module.exports = function(robot) {
     }
   });
 
+  robot.respond(/\b(kung|fury)+\b/i, function(msg) {
+    sendMessage(msg, kungfury);
+  });
 };
