@@ -64,7 +64,7 @@ module.exports = function(robot) {
     "Kung Fury: _Fuck! That's a laser raptor. I thought they went extinct thousands of years ago._",
     "Private Lahmstache: _Where did the tank go?_ \n[Kung Fury holds the tank upward from the barrel and squashes the two Nazi soldiers with it]\nKung Fury: _Tank you._",
     "Thor: _Behold - it is me, Thor. Son of Odin and protector of mankind. Check out my pecs._",
-    "Kung Fury: _Knock knock!_ \nKung-Fu Master: _Who's there?_ \nKung Fury: _Knu...ckles._"
+    "Kung Fury: _Knock knock!_ \nRed Ninja: _Who's there?_ \nKung Fury: _Knu...ckles._"
   ];
 
   function filterChannel(msg) {
