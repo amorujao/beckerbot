@@ -54,7 +54,10 @@ module.exports = function(robot) {
     'lolol',
     'lmao',
     'rotfl',
-    'http://media.giphy.com/media/reJOGQ43nNeGk/giphy.gif'
+    ':D',
+    'http://media.giphy.com/media/reJOGQ43nNeGk/giphy.gif',
+    'https://www.youtube.com/watch?v=oShTJ90fC34',
+    'http://campusheathq.com/wp-content/uploads/2014/03/LMAO.png'
   ];
 
   var kungfury = [
