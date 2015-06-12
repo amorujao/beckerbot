@@ -170,4 +170,8 @@ module.exports = function(robot) {
   robot.respond(/\b(kung|fury)+\b/i, function(msg) {
     sendMessage(msg, kungfury);
   });
+
+  robot.hear(/\bbuy now\?/i, function(msg) {
+    sendMessage(msg, ["Buy now!"]);
+  });
 };
