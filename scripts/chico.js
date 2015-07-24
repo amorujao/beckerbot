@@ -101,7 +101,7 @@ module.exports = function(robot) {
     }
 
     if (text.search(/doente|sick|medico|médico|doctor/i) >= 0) {
-      sendMessage(msg, jd);
+      sendMessage(msg, jd, 0.3333);
       return;
     } else if (text.search(/\ball in\b/i) >= 0) {
       sendMessage(msg, ["http://www.pokerdictionary.net/wp-content/uploads/2013/01/poker_face.png"]);
