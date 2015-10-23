@@ -78,6 +78,13 @@ module.exports = function(robot) {
     sendMessage(msg, ["http://media.giphy.com/media/JDKxRN0Bvmm2c/giphy.gif", "http://www.reactiongifs.us/wp-content/uploads/2013/06/ill_be_back_terminator.gif"]);
   });
 
+  robot.hear(/^((?!i.?ll).)*be back in/i, function(msg) {
+    if (filterChannel(msg)) {
+      return;
+    }
+    sendMessage(msg, ["http://www.quickmeme.com/img/04/0429078be3870a05c54ecae0b10ddd5afb749b3e5f5ee9f4382af36601766960.jpg"], 0.2);
+  });
+
   robot.hear(/\b(in|out)\b/i, function(msg) {
 
     if (filterChannel(msg)) {
@@ -94,7 +101,7 @@ module.exports = function(robot) {
     }
 
     if (text.search(/doente|sick|medico|médico|doctor/i) >= 0) {
-      sendMessage(msg, jd);
+      sendMessage(msg, jd, 0.3333);
       return;
     } else if (text.search(/\ball in\b/i) >= 0) {
       sendMessage(msg, ["http://www.pokerdictionary.net/wp-content/uploads/2013/01/poker_face.png"]);

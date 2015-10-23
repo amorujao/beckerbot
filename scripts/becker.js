@@ -21,14 +21,10 @@ module.exports = function(robot) {
     'A resposta é não.',
     'Estás um bocado _lumberjack_ #user#',
     'Agora todos...',
-    'Dá cá um abraço, #user#',
     '#user#, já não me amas :(',
     'Tu não me fales assim, #user#!',
-    'Aquele abraço, forte e sentido',
     'Something you gotta understand #user#: I don\'t care about you, and I sure don\'t care about your family.',
-    '#user# I have two words for you, and the second one is "you"',
-    'Oh my goodness dot com!',
-    'Não percebi'
+    '#user# I have two words for you, and the second one is "you"'
   ];
 
   // csilvada
@@ -44,9 +40,13 @@ module.exports = function(robot) {
     'Na ponta da piroca!'
   ];
 
-  var unknown = [
+  // phrases used by more than one person
+  var misc = [
     'Há aqui um galhenz',
-    '#user# aquele abraço'
+    '#user# aquele abraço',
+    'Dá cá um abraço, #user#',
+    'Aquele abraço, forte e sentido',
+    'Oh my goodness dot com!'
   ];
 
   var lulz = [
@@ -54,8 +54,22 @@ module.exports = function(robot) {
     'lolol',
     'lmao',
     'rotfl',
-    'http://media.giphy.com/media/reJOGQ43nNeGk/giphy.gif'
+    ':D'
   ];
+
+  var kungfury = [
+    "*Kung Fury:* _You don't need that spine._ \n[Grabs Nazi soldier by the head and rips out his spine]\n*Kung Fury:* _It's holding you back._",
+    "*Kung Fury:* _I'm disarming you._ [rips Nazi soldier's arm off]",
+    "*Hacker Man:* _Wait a minute. Using an RX modulator, I might be able to conduct a mainframe cell layer and hack you into the download._ \n*Kung Fury:* _What the hell does that mean?_ \n*Hacker Man:* _It means that with the right computer algorithms, I can hack you back in time. Just like a time machine._",
+    "*Kung Fury:* _Fuck! That's a laser raptor. I thought they went extinct thousands of years ago._",
+    "*Private Lahmstache:* _Where did the tank go?_ \n[Kung Fury holds the tank upward from the barrel and squashes the two Nazi soldiers with it]\n*Kung Fury:* _Tank you._",
+    "*Thor:* _Behold - it is me, Thor. Son of Odin and protector of mankind. Check out my pecs._",
+    "*Kung Fury:* _Knock knock!_ \n*Red Ninja:* _Who's there?_ \n*Kung Fury:* _Knu...ckles._"
+  ];
+
+  function filterChannel(msg) {
+    return msg.message.user.room == "general";
+  }
 
   function sendMessage(msg, options, odds) {
     if (filterChannel(msg)) {
@@ -75,12 +89,8 @@ module.exports = function(robot) {
     }
   }
 
-  function filterChannel(msg) {
-    return msg.message.user.room == "general";
-  }
-
   robot.respond(/\bquote|hit( me)?\b/i, function(msg) {
-    var all = jb.concat(rg, cs, unknown);
+    var all = misc.concat(jb, rg, cs);
     sendMessage(msg, all);
   });
 
@@ -100,7 +110,7 @@ module.exports = function(robot) {
     sendMessage(msg, cs);
   });
 
-  robot.hear(/peço desculpa/i, function(msg) {
+  robot.hear(/\bpeço desculpa\b/i, function(msg) {
     sendMessage(msg, ["não, eu é que peço desculpa"]);
   });
 
@@ -113,7 +123,7 @@ module.exports = function(robot) {
     sendMessage(msg, ["forte e sentido"]);
   });
 
-  robot.hear(/\b(pit(t?)|smack)\b/i, function(msg) {
+  robot.hear(/\b(smack|pit(t?))\b/i, function(msg) {
     sendMessage(msg, ["Smack the Pit!!"]);
   });
 
@@ -121,7 +131,7 @@ module.exports = function(robot) {
     sendMessage(msg, ["en-_habascript_"]);
   });
 
-  robot.hear(/\blo(l|o)+|lmao|rotfl\b/i, function(msg) {
+  robot.hear(/\blo(l|o)+|lmao|rotfl(o|l)+\b/i, function(msg) {
 
     var now = new Date().getTime();
     var room = msg.message.room;
@@ -154,4 +164,11 @@ module.exports = function(robot) {
     }
   });
 
+  robot.respond(/\b(kung|fury)+\b/i, function(msg) {
+    sendMessage(msg, kungfury);
+  });
+
+  robot.hear(/\bbuy now\?/i, function(msg) {
+    sendMessage(msg, ["Buy now!"]);
+  });
 };

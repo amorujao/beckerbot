@@ -33,7 +33,7 @@ class Poll
 
     @robot.respond /poll (.*) -a (.*)/i, this.createPoll
     @robot.respond /(end|stop|close) poll/i, this.endPoll
-    @robot.respond /(v|b)?ote ([0-9]*)/i, this.vote
+    @robot.respond /(v|b)?ote ([0-9]+)/i, this.vote
     @robot.respond /previous poll/i, this.showPreviousPoll
     @robot.respond /poll( status)?$/i, this.showPollStatus
 
