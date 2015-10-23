@@ -15,6 +15,21 @@
 
 module.exports = function(robot) {
 
+    var teamPairs = [
+        ["Tigers", "Dragons"],
+        ["Hawks", "Eagles"],
+        ["Velociraptors", "Tyrannosaurus Rex"],
+        //["Cobra Kai Dojo", "Miyagi Dojo"],
+        ["Cobras", "Vipers"],
+        //["Jedi", "Sith"],
+        ["Bulls", "Bears"],
+        ["Wolves", "Coyotes"],
+        ["Sharks", "Orcas"],
+        ["King Cobras", "Pythons"],
+        ["Leopards", "Cheetahs"],
+        ["Scorpions", "Snakes"]
+    ];
+
     function shuffle(arr){
         for(var j, x, i = arr.length; i; j = Math.floor(Math.random() * i), x = arr[--i], arr[i] = arr[j], arr[j] = x);
     };
@@ -35,9 +50,8 @@ module.exports = function(robot) {
             }
         }
 
-        var team1Name = "Team A";
-        var team2Name = "Team B";
+        var teamNames = teamPairs[Math.floor(Math.random() * teamPairs.length)];
 
-        msg.send(team1Name + ": " + team1 + "\n" + team2Name + ": " + team2);
+        msg.send(teamNames[0] + ": " + team1.join(", ") + "\n" + teamNames[1] + ": " + team2.join(", "));
     });
 };
