@@ -40,7 +40,14 @@ module.exports = function(robot) {
 	["Mega Python", "Gatoroid"],
 	["Dinocroc", "Supergator"],
 	["Komodo", "Cobra"],//technically these would also fit the animals category
-	["Piranhaconda", "Frankenfish"]
+	["Piranhaconda", "Frankenfish"],
+	
+	// funny modified versions of real teams
+	["Borussia D'outro mundo", "Bayern Mugido"],
+	["Arse 'n' all", "Aston Vanilla"],
+	["Liquor Pool FC", "Man-Chest-Hair United"],
+	["Queens Park Strangers", "Manchester Titty"],
+	["Enter 'Me Lamb", "Jewventus"]
 
 	// random
     ];
