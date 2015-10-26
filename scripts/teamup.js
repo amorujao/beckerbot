@@ -44,11 +44,11 @@ module.exports = function(robot) {
 	["Piranhaconda", "Frankenfish"],
 	
 	// funny modified versions of real teams
-	["Borussia D'outro mundo", "Bayern Mugido"],
-	["Arse 'n' all", "Aston Vanilla"],
-	["Liquor Pool FC", "Man-Chest-Hair United"],
-	["Queens Park Strangers", "Manchester Titty"],
-	["Enter 'Me Lamb", "Jewventus"]
+	["Borussia D'outro mundo", "Bayern Mugido", "http://blogstorage.s3.amazonaws.com/upload/SportsBlogcom/1133065/0880132001443811880_filepicker.jpg"],
+	["Arse 'n' all", "Aston Vanilla", "http://www.arsenalinsider.com/wp-content/uploads/2013/08/arsenal-aston-villa-premiership-opener.jpg"],
+	["Liquor Pool FC", "Man-Chest-Hair United", "http://www.total-goal.com/wp-content/uploads/2014/08/liverpool_man_united1.jpg"],
+	["Queens Park Strangers", "Manchester Titty", "http://api.ning.com/files/n9PWw31tPWylJCHSFIMK9rzZKqXve59Mhc-MHSZ3LOgFAyMeolcXycwtx8SQDTZUijPe2CU2pFN4FpsWh9lDb0i5gzZ1YgJM/QPRvsManCity.jpg"],
+	["Enter 'Me Lamb", "Jewventus", "http://www.sempreinter.com/wp-content/uploads/2015/05/Inter-vs-Juventus.jpg"]
 
 	// random
     ];
