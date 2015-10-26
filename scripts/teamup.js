@@ -16,18 +16,33 @@
 module.exports = function(robot) {
 
     var teamPairs = [
-        ["Tigers", "Dragons"],
-        ["Hawks", "Eagles"],
-        ["Velociraptors", "Tyrannosaurus Rex"],
-        //["Cobra Kai Dojo", "Miyagi Dojo"],
-        ["Cobras", "Vipers"],
-        //["Jedi", "Sith"],
-        ["Bulls", "Bears"],
-        ["Wolves", "Coyotes"],
-        ["Sharks", "Orcas"],
-        ["King Cobras", "Pythons"],
-        ["Leopards", "Cheetahs"],
-        ["Scorpions", "Snakes"]
+	// animals
+	["Hawks", "Eagles"],
+	["Velociraptors", "Tyrannosaurus Rex"],
+	["Cobras", "Vipers"],
+	["Bulls", "Bears"],
+	["Wolves", "Coyotes"],
+	["Sharks", "Killer Whales"],
+	["Cobras", "Pythons"],
+	["Leopards", "Cheetahs"],
+	["Scorpions", "Snakes"],
+
+	// movies & animated series
+	["Crouching Tigers", "Hidden Dragons"]
+	["Cobra Kai Dojo", "Miyagi Dojo"],
+	["Jedi", "Sith"],
+	["Decepticons", "Transformers"],
+	["X-Men", "Watchmen"],
+	["A-Team", "Expendables"],
+	["Reservoir Dogs", "Inglourious Basterds"],
+
+	// sci-fi channel movies
+	["Mega Python", "Gatoroid"],
+	["Dinocroc", "Supergator"],
+	["Komodo", "Cobra"],//technically these would also fit the animals category
+	["Piranhaconda", "Frankenfish"]
+
+	// random
     ];
 
     function shuffle(arr){
