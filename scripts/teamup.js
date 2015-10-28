@@ -54,21 +54,21 @@ module.exports = function(robot) {
     ];
 
     var nicknames = [
-	[["am"], ["André"]],
-	[["cb"], ["Carlos Barbosa"]],
+	[["am", "andre", "andré"], ["André"]],
+	[["cb", "barbosa"], ["Captain Barbossa"]],
 	[["cs", "silva"], ["Carlos Fucking Silva"]],
-	[["jm"], ["João"]],
-	[["morais"], ["João Morais"]],
-	[["jb", "jorge"], ["Jorge o Mágico"]],
-	[["jc"], ["José Carlos"]],
-	[["jr"], ["José Ribeiro"]],
-	[["ns"], ["Nuno"]],
-	[["pd"], ["Paulo"]],
-	[["pp"], ["Paulo Pinho"]],
-	[["rg", "ricardo"], ["Ricardo o Chita"]],
-	[["rf"], ["Rui"]],
-	[["sa"], ["Sérgio"]],
-	[["vt"], ["Vasco"]],
+	[["jm", "joao", "joão"], ["The Rock Macedo"]],
+	[["joao morais", "joão morais", "morais"], ["João Morais"]],
+	[["jb", "jorge", "batista", "baptista", "jorge batista", "jorge baptista"], ["Magic Jorge"]],
+	[["jc", "jose carlos", "josé carlos", "ze carlos", "zé carlos", "medeiros"], ["Zé Carlos"]],
+	[["jr", "jose", "josé", "jose ribeiro", "josé ribeiro"], ["Maxi Ribeiro"]],
+	[["ns", "nuno"], ["Nuno"]],
+	[["pd", "paulo", "dias", "paulo dias"], ["Paulo"]],
+	[["pp", "pinho", "paulo pinho"], ["Paulo Pinho"]],
+	[["rg", "ricardo", "gomes", "ricardo gomes"], ["Cheetah Gomes"]],
+	[["rf", "rui"], ["Rui"]],
+	[["sa", "sergio", "sérgio"], ["Sérgio"]],
+	[["vt", "vasco"], ["Vasco"]],
     ];
 
     function shuffle(arr){
