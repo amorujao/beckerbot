@@ -53,6 +53,24 @@ module.exports = function(robot) {
 	// random
     ];
 
+    var nicknames = [
+	[["am"], ["André"]],
+	[["cb"], ["Carlos Barbosa"]],
+	[["cs", "silva"], ["Carlos Fucking Silva"]],
+	[["jm"], ["João"]],
+	[["morais"], ["João Morais"]],
+	[["jb", "jorge"], ["Jorge o Mágico"]],
+	[["jc"], ["José Carlos"]],
+	[["jr"], ["José Ribeiro"]],
+	[["ns"], ["Nuno"]],
+	[["pd"], ["Paulo"]],
+	[["pp"], ["Paulo Pinho"]],
+	[["rg", "ricardo"], ["Ricardo o Chita"]],
+	[["rf"], ["Rui"]],
+	[["sa"], ["Sérgio"]],
+	[["vt"], ["Vasco"]],
+    ];
+
     function shuffle(arr){
         for(var j, x, i = arr.length; i; j = Math.floor(Math.random() * i), x = arr[--i], arr[i] = arr[j], arr[j] = x);
     };
@@ -60,6 +78,23 @@ module.exports = function(robot) {
     robot.hear(/teamup (.+)/i, function(msg) {
         var players = msg.match[1].split(/\s?,\s?/);
         shuffle(players);
+
+        for (var i = 0; i < players.length; i++) {
+            var name = players[i].toLowerCase();
+            for (var j = 0; j < nicknames.length && name != ""; j++) {
+                var nicks = nicknames[j];
+                var names = nicks[0];
+                for (var k = 0; k < names.length; k++) {
+                    if (name === names[k]) {
+                        nicks = nicks[1];
+                        var nick = nicks[Math.floor(Math.random() * nicks.length)];
+                        players[i] = nick.replace("$name", players[i]);
+                        name = "";
+                        break;
+                    }
+                }
+            }
+        }
 
         var midPoint = Math.floor(players.length / 2);
         var team1 = [];
