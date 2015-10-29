@@ -49,7 +49,7 @@ module.exports = function(robot) {
     'http://www.jackdaniels.com/sites/default/files/MD1_small.png',
     'Um Jack Daniels resolve isso'
   ];
-  var timezoneOffset = 1;
+  var timezoneOffset = 0;
 
   function sendMessage(msg, options, odds) {
     if (typeof odds === 'undefined') {
