@@ -51,11 +51,26 @@ module.exports = function(robot) {
   ];
   var timezoneOffset = 0;
 
-  function sendMessage(msg, options, odds) {
+  function sendMessage(msg, options, odds, cooldown, cooldownKey) {
     if (typeof odds === 'undefined') {
       odds = 1;
     }
+    if (typeof cooldown === 'undefined') {
+      cooldown = 0;
+    }
+    if (typeof cooldownKey === 'undefined') {
+      cooldownKey = '';
+    }
     if (Math.random() <= odds) {
+      if (cooldown > 0 && cooldownKey != '') {
+        cooldownKey = "last_cooldown_sent_" + cooldownKey;
+        var lastMsgTime = msg.robot.brain.get(cooldownKey);
+        var now = new Date().getTime();
+        if (lastMsgTime != undefined && now <= (lastMsgTime + cooldown)) {
+          return;
+        }
+        msg.robot.brain.set(cooldownKey, now);
+      }
       var user = msg.message.user.name;
       if (msg.message.user.real_name != undefined) {
         var names = msg.message.user.real_name.split(" ");
@@ -119,6 +134,15 @@ module.exports = function(robot) {
 
     var hours = now.getHours() + timezoneOffset;
     var explanation = text.trim().length > 3;
+
+    if (weekDay == 2 && (hours >= 11 && hours <= 14) &&
+        (text.search(/\bhome\b/i) >= 0 || text.search(/\bcasa\b/i) >= 0 || text.search(/\bout\b/i) >= 0 || text.search(/\bin\b/i) >= 0)) {
+      var user = msg.message.user.name;
+      if (msg.message.user.real_name != undefined && msg.message.user.real_name.split(" ")[0] == "Jorge") {
+        sendMessage(msg, ["https://bemmaiorboutique.com/product_images/c/981/FF16_Emprega_2__25393_zoom.jpg", "http://i381.photobucket.com/albums/oo257/webuser/sexy-maid.gif", "https://s-media-cache-ak0.pinimg.com/736x/03/08/37/030837a55e5ae28f23061fe50a21a683.jpg"], 1, 60*60*12, "cleaning_lady");
+        return;
+      }
+    }
 
     switch(hours) {
       case 7:
