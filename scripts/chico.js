@@ -149,13 +149,13 @@ module.exports = function(robot) {
       case 8:
       case 9:
         if (_in) {
-          sendMessage(msg, in_normal, 0.2);
+          sendMessage(msg, in_normal, 0.15);
         }
         break;
       case 10:
       case 11:
         if (_in && !explanation) {
-          sendMessage(msg, in_late, 1);
+          sendMessage(msg, in_late, 0.666666);
         }
         break;
       case 12:
@@ -170,17 +170,17 @@ module.exports = function(robot) {
       case 17:
         if (_out) {
           if (explanation) {
-            sendMessage(msg, out_normal, 0.25);
+            sendMessage(msg, out_normal, 0.1);
           } else {
-          sendMessage(msg, out_early, 1);
-        }
+            sendMessage(msg, out_early, 0.3333333);
+          }
         }
         break;
       case 18:
       case 19:
       case 20:
         if (_out) {
-          sendMessage(msg, out_normal, 0.25);
+          sendMessage(msg, out_normal, 0.1);
         }
         break;
       default:
