@@ -77,8 +77,14 @@ module.exports = function(robot) {
         for(var j, x, i = arr.length; i; j = Math.floor(Math.random() * i), x = arr[--i], arr[i] = arr[j], arr[j] = x);
     };
 
-    robot.hear(/teamup (.+)/i, function(msg) {
-        var players = msg.match[1].split(/\s?,\s?/);
+    function teamup(msg, players, rivals) {
+
+        //TODO: add support for rivals
+        if (rivals.length > 0) {
+            msg.send("Sorry, rival support is not implemented yet.");
+            return;
+        }
+
         shuffle(players);
 
         for (var i = 0; i < players.length; i++) {
@@ -102,10 +108,11 @@ module.exports = function(robot) {
         var team1 = [];
         var team2 = [];
         for(var i = 0; i < players.length; i++){
+            // TODO: only pick captains from Becker's names, not from outsiders
             if (i < midPoint) {
-                team1.push((i == 0 ? "*Captain* " : "") + players[i]);
+                team1.push(i == 0 ? (":crown:*" + players[i] + "*") : players[i]);
             } else {
-                team2.push((i == midPoint ? "*Captain* " : "") + players[i]);
+                team2.push(i == midPoint ? (":crown:*" + players[i] + "*") : players[i]);
             }
         }
 
@@ -114,6 +121,23 @@ module.exports = function(robot) {
         if (teamNames.length == 3) {
             msg.send(teamNames[2]);
         }
-        msg.send(teamNames[0] + ": " + team1.join(", ") + "\n" + teamNames[1] + " (com coletes): " + team2.join(", "));
+        msg.send(":soccer: *" + teamNames[0] + "*: " + team1.join(", ") + "\n:shirt: *" + teamNames[1] + "*: " + team2.join(", "));
+    };
+
+    robot.hear(/teamup (.+)/i, function(msg) {
+      var players = msg.match[1].split(/\s?,\s?/);
+      teamup(msg, players, []);
     });
+
+    // Work in progress; we'll need to update the previous regex to not match this version, or instead use only the version below
+    /*robot.hear(/teamup players (.+) rivals (.+)/i, function(msg) {
+
+        var players = msg.match[2].split(/\s?,\s?/);
+        var rivals = msg.match[3].split(/\s?,\s?/);
+
+        //TODO: validate and arrange rivals
+
+        teamup(msg, players, rivals);
+    });*/
+
 };
