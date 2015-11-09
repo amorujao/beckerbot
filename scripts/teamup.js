@@ -55,7 +55,7 @@ module.exports = function(robot) {
 
     var nicknames = [
 	[["am", "andre", "andré"], ["André"]],
-	[["cb", "barbosa"], ["Captain Barbossa"]],
+	[["cb", "barbosa"], ["Barbossa"]],
 	[["cs", "silva"], ["Carlos Fucking Silva"]],
 	[["jm", "joao", "joão"], ["The Rock Macedo"]],
 	[["joao morais", "joão morais", "morais"], ["João Morais"]],
@@ -102,11 +102,10 @@ module.exports = function(robot) {
         var team1 = [];
         var team2 = [];
         for(var i = 0; i < players.length; i++){
-            if(i < midPoint){
-                team1.push(players[i]);
-            }
-            else{
-                team2.push(players[i]);
+            if (i < midPoint) {
+                team1.push((i == 0 ? "*Captain* " : "") + players[i]);
+            } else {
+                team2.push((i == midPoint ? "*Captain* " : "") + players[i]);
             }
         }
 
@@ -115,6 +114,6 @@ module.exports = function(robot) {
         if (teamNames.length == 3) {
             msg.send(teamNames[2]);
         }
-        msg.send(teamNames[0] + ": " + team1.join(", ") + "\n" + teamNames[1] + ": " + team2.join(", "));
+        msg.send(teamNames[0] + ": " + team1.join(", ") + "\n" + teamNames[1] + " (com coletes): " + team2.join(", "));
     });
 };
