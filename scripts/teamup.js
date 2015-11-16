@@ -55,7 +55,7 @@ module.exports = function(robot) {
 
     var nicknames = [
 	[["am", "andre", "andré"], ["André"]],
-	[["cb", "barbosa"], ["Barbossa"]],
+	[["cb", "barbosa"], ["Captain Barbossa"]],
 	[["cs", "silva"], ["Carlos Fucking Silva"]],
 	[["jm", "joao", "joão"], ["John The Rock Macedo"]],
 	[["joao morais", "joão morais", "morais"], ["João Morais"]],
