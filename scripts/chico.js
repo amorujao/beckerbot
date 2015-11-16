@@ -135,11 +135,11 @@ module.exports = function(robot) {
     var hours = now.getHours() + timezoneOffset;
     var explanation = text.trim().length > 3;
 
-    if (weekDay == 2 && (hours >= 11 && hours <= 14) &&
-        (text.search(/\bhome\b/i) >= 0 || text.search(/\bcasa\b/i) >= 0 || text.search(/\bout\b/i) >= 0 || text.search(/\bin\b/i) >= 0)) {
+    if (weekDay == 2 && (hours >= 13 && hours < 15) &&
+        (text.search(/\bhome\b/i) >= 0 || text.search(/\bcasa\b/i) >= 0 || text.search(/\bin\b/i) >= 0)) {
       var user = msg.message.user.name;
       if (msg.message.user.real_name != undefined && msg.message.user.real_name.split(" ")[0] == "Jorge") {
-        sendMessage(msg, ["https://bemmaiorboutique.com/product_images/c/981/FF16_Emprega_2__25393_zoom.jpg", "http://i381.photobucket.com/albums/oo257/webuser/sexy-maid.gif", "https://s-media-cache-ak0.pinimg.com/736x/03/08/37/030837a55e5ae28f23061fe50a21a683.jpg"], 1, 60*60*12, "cleaning_lady");
+        sendMessage(msg, ["https://bemmaiorboutique.com/product_images/c/981/FF16_Emprega_2__25393_zoom.jpg", "http://i381.photobucket.com/albums/oo257/webuser/sexy-maid.gif", "https://s-media-cache-ak0.pinimg.com/736x/03/08/37/030837a55e5ae28f23061fe50a21a683.jpg"], 0.6666, 60*60*12, "cleaning_lady");
         return;
       }
     }
