@@ -8,14 +8,38 @@
 //  None
 //
 //Commands:
-//  hubot teamup <players> - Create two teams with comma separated players
+//  hubot teamup <players> - Create two teams with comma separated players (to use rankings, use player initials)
+//  hubot futsal get stats <player> - Get win/draw/loss stats for an individual player
+//  hubot futsal show ranking - Get current futsal rankings based on previous matches
 //
 //Author:
 //  rferreira
 
 module.exports = function(robot) {
 
-    var teamPairs = [
+	// each item: [<aliases>, <nicknames>]
+	// <aliases>: array of names to be matched
+	// <nicknames>: array of nicknames to use for player (one will be picked at random)
+	var users = [
+	[["am", "andre", "andré"], ["André"]],
+	[["cb", "barbosa"], ["Captain Barbossa"]],
+	[["cs", "silva"], ["Carlos Fucking Silva"]],
+	[["jm", "joao", "joão"], ["John The Rock Macedo"]],
+	[["joao morais", "joão morais", "morais"], ["João Morais"]],
+	[["jb", "jorge", "batista", "baptista", "jorge batista", "jorge baptista"], ["Jorge o Mágico", "Magic Jorge XXL"]],
+	[["jc", "jose carlos", "josé carlos", "ze carlos", "zé carlos", "medeiros"], ["José Carlos"]],
+	[["jr", "jose", "josé", "jose ribeiro", "josé ribeiro"], ["Zé Maxi Ribeiro"]],
+	[["ns", "nuno"], ["Nuno"]],
+	[["pd", "paulo", "dias", "paulo dias"], ["Paulo"]],
+	[["pp", "pinho", "paulo pinho"], ["Paulo Pinho"]],
+	[["rg", "ricardo", "gomes", "ricardo gomes"], ["Ricardo Cheetah Gomes"]],
+	[["rf", "rui"], ["Rui"]],
+	[["sa", "sergio azevedo", "sérgio azevedo", "azevedo"], ["Sérgio Azevedo"]],
+	[["sd", "sergio dias", "sérgio dias"], ["Sérgio El Gato Dias", "Sérgio Zlatan Dias", "Sérgio Higuita Dias"]],
+	[["vt", "vasco"], ["Vasco"]],
+    ];
+
+	var teamPairs = [
 
 	// animals
 	["Hawks", "Eagles", "https://f1.bcbits.com/img/a3151354777_10.jpg"],
@@ -51,77 +75,111 @@ module.exports = function(robot) {
 	["Enter 'Me Lamb", "Jewventus", "http://www.sempreinter.com/wp-content/uploads/2015/05/Inter-vs-Juventus.jpg"]
 
 	// random
-    ];
-
-    var nicknames = [
-	[["am", "andre", "andré"], ["André"]],
-	[["cb", "barbosa"], ["Captain Barbossa"]],
-	[["cs", "silva"], ["Carlos Fucking Silva"]],
-	[["jm", "joao", "joão"], ["John The Rock Macedo"]],
-	[["joao morais", "joão morais", "morais"], ["João Morais"]],
-	[["jb", "jorge", "batista", "baptista", "jorge batista", "jorge baptista"], ["Jorge o Mágico", "Magic Jorge XXL"]],
-	[["jc", "jose carlos", "josé carlos", "ze carlos", "zé carlos", "medeiros"], ["Zé Carlos"]],
-	[["jr", "jose", "josé", "jose ribeiro", "josé ribeiro"], ["Zé Maxi Ribeiro"]],
-	[["ns", "nuno"], ["Nuno"]],
-	[["pd", "paulo", "dias", "paulo dias"], ["Paulo"]],
-	[["pp", "pinho", "paulo pinho"], ["Paulo Pinho"]],
-	[["rg", "ricardo", "gomes", "ricardo gomes"], ["Ricardo Cheetah Gomes"]],
-	[["rf", "rui"], ["Rui"]],
-	[["sergio", "sérgio"], ["Sérgio"]],
-	[["sa", "sergio azevedo", "sérgio azevedo", "azevedo"], ["Sérgio Azevedo"]],
-	[["sd", "sergio dias", "sérgio dias"], ["Sérgio El Gato Dias"]],
-	[["vt", "vasco"], ["Vasco"]],
-    ];
+	];
 
     function shuffle(arr){
         for(var j, x, i = arr.length; i; j = Math.floor(Math.random() * i), x = arr[--i], arr[i] = arr[j], arr[j] = x);
     };
 
-    function teamup(msg, players, rivals) {
-
-        //TODO: add support for rivals
-        if (rivals.length > 0) {
-            msg.send("Sorry, rival support is not implemented yet.");
-            return;
-        }
-
-        shuffle(players);
-
-        for (var i = 0; i < players.length; i++) {
-            var name = players[i].toLowerCase();
-            for (var j = 0; j < nicknames.length && name != ""; j++) {
-                var nicks = nicknames[j];
-                var names = nicks[0];
-                for (var k = 0; k < names.length; k++) {
-                    if (name === names[k]) {
-                        nicks = nicks[1];
-                        var nick = nicks[Math.floor(Math.random() * nicks.length)];
-                        players[i] = nick.replace("$name", players[i]);
-                        name = "";
-                        break;
-                    }
+	function getName(alias) {
+		var aliasLowerCase = alias.toLowerCase();
+        for (var i = 0; i < users.length; i++) {
+            var nicks = users[i];
+            var names = nicks[0];
+            for (var j = 0; j < names.length; j++) {
+                if (aliasLowerCase === names[j]) {
+                    nicks = nicks[1];
+                    return nicks[Math.floor(Math.random() * nicks.length)];
                 }
             }
         }
+        return alias;
+    }
 
-        var midPoint = Math.floor(players.length / 2);
-        var team1 = [];
-        var team2 = [];
-        for(var i = 0; i < players.length; i++){
-            // TODO: only pick captains from Becker's names, not from outsiders
-            if (i < midPoint) {
-                team1.push(i == 0 ? (":crown:*" + players[i] + "*") : players[i]);
-            } else {
-                team2.push(i == midPoint ? (":crown:*" + players[i] + "*") : players[i]);
-            }
+	// TODO: implement persistent stats
+	var stats = {
+		"am":[1,1,1],
+		"jr":[0,0,1],
+		"rf":[2,1,0],
+		"jb":[1,0,0],
+		"pd":[0,0,2],
+		"rg":[1,1,1],
+		"jc":[1,1,0],
+		"jm":[0,1,2],
+		"sa":[1,0,1],
+		"sd":[1,0,0]
+	};
+    function getStats(user) {
+        if (user in stats) {
+            return stats[user];
+        } else {
+            return [0, 0, 0];
+        }
+    }
+
+	function getPlayerScore(user) {
+		var stats = getStats(user);
+		// simpler scoring: 3 points for victories, 1 point for draws, 0 points for losses
+		// return stats[0] * 3 + stats[1] * 1;
+		var played = stats[0] + stats[1] + stats[2];
+		if (played == 0) {
+			return 0;
+		}
+		var winLossBalance = stats[0] - stats[2];
+		var winRatio = stats[0] / played;
+		return winLossBalance * 10 + winRatio;
+	}
+
+	function sortPlayers(players) {
+		players.sort(function (player1, player2) {
+			var score1 = getPlayerScore(player1);
+			var score2 = getPlayerScore(player2);
+			if (score1 == score2) {
+				// randomize order for players with the same score
+				return Math.floor(Math.random() * 3);
+			}
+			return score2 - score1;
+		});
+	}
+
+	function teamup(msg, players, rivals) {
+
+		//TODO: add support for rivals
+		if (rivals.length > 0) {
+			msg.send("Sorry, rival support is not implemented yet.");
+			return;
+		}
+
+		// use ranking to sort players
+		sortPlayers(players);
+
+        // replace aliases with nicknames
+        for (var i = 0; i < players.length; i++) {
+            players[i] = getName(players[i]);
         }
 
+		// set up teams with the following distribution:
+		// 1. first player goes to team A
+		// 2. players #2 and #3 go to team B
+		// 3. players #4 and #5 go to team A
+		// 4. ... and so on, until all players are placed in teams
+		var teams = [[], []];
+		for (var player = 0, team = Math.floor(Math.random() * 2); player < players.length; player++) {
+			teams[team].push(players[player]);
+			var otherTeam = (team + 1) % 2;
+			if (teams[team].length > teams[otherTeam].length) {
+				team = otherTeam;
+			}
+		}
+
+        // randomize team names
         var teamNames = teamPairs[Math.floor(Math.random() * teamPairs.length)];
 
+        // display teams & players
         if (teamNames.length == 3) {
             msg.send(teamNames[2]);
         }
-        msg.send(":soccer: *" + teamNames[0] + "*: " + team1.join(", ") + "\n:shirt: *" + teamNames[1] + "*: " + team2.join(", "));
+        msg.send(":soccer: *" + teamNames[0] + "*: " + teams[0].join(", ") + "\n:shirt: *" + teamNames[1] + "*: " + teams[1].join(", "));
     };
 
     robot.hear(/teamup (.+)/i, function(msg) {
@@ -139,5 +197,46 @@ module.exports = function(robot) {
 
         teamup(msg, players, rivals);
     });*/
+
+    robot.hear(/futsal (show|get) stats (.+)/i, function(msg) {
+      var player = msg.match[2];
+      var stats = getStats(player);
+      msg.send(getName(player) + ": " + stats[0] + " wins " + stats[1] + " draws " + stats[2] + " losses");
+    });
+
+	robot.hear(/futsal (.+) ranking/i, function(msg) {
+		var players = [];
+		var action = msg.match[1];
+		if (action != "show" && action != "debug") {
+			msg.send("Invalid action: '" + action + "'\nUsing 'show' instead.");
+			action = "show";
+		}
+		for (var i = 0; i < users.length; i++) {
+			var u = users[i][0][0];
+			var s = getStats(u);
+			// only show players with at least 1 match played
+			if (s[0] + s[1] + s[2] > 0) {
+				players.push(u);
+			}
+		}
+		// sort players according to their ranking
+		sortPlayers(players);
+		var ranking = [];
+		var lastScore = 999999999999;
+		for (var i = 0, rank = 0; i < players.length; i++) {
+			var player = players[i];
+			var score = getPlayerScore(player);
+			if (score != lastScore) {
+				rank = i + 1;
+			}
+			var rankLine = "#" + rank + " " + getName(player);
+			if (action == "debug") {
+				rankLine += " " + score;
+			}
+			ranking.push(rankLine);
+			lastScore = score;
+		}
+		msg.send(ranking.join("\n"));
+	});
 
 };
