@@ -282,7 +282,8 @@ module.exports = function(robot) {
 			}
 			var rankLine = "#" + rank + " " + getName(player);
 			if (action == "debug ") {
-				rankLine += " " + score;
+				var stats = getStats(msg, player);
+				rankLine += " W:" + stats[0] + " D:" + stats[1] + " L:" + stats[2] + " " + score;
 			}
 			ranking.push(rankLine);
 			lastScore = score;
