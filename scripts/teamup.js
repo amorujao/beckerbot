@@ -37,7 +37,7 @@ module.exports = function(robot) {
 	[["rg", "ricardo", "gomes", "ricardo gomes"], ["Ricardo Cheetah Gomes"]],
 	[["rf", "rui"], ["Rui"]],
 	[["sa", "sergio azevedo", "sérgio azevedo", "azevedo"], ["Sérgio Azevedo"]],
-	[["sd", "sergio dias", "sérgio dias"], ["Sérgio El Gato Dias", "Sérgio Zlatan Dias", "Sérgio Higuita Dias"]],
+	[["sd", "sergio dias", "sérgio dias"], ["Sérgio El Gato Dias", "Sérgio Zlatan Dias", "Sérgio Higuita Dias", "Sérgio El Kitty Dias"]],
 	[["vt", "vasco"], ["Vasco"]],
     ];
 
