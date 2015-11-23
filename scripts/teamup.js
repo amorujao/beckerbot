@@ -9,8 +9,9 @@
 //
 //Commands:
 //  hubot teamup <players> - Create two teams with comma separated players (to use rankings/nicknames, use player initials)
-//  hubot futsal teamup <players> team1 <team 1 players> team2 <team 2 players> - Create two teams with the given players and pre-populate each team with at least 1 player each
+//  hubot futsal teamup=<players> team1=<team 1 players> team2=<team 2 players> type=<random|ranking>- Create two teams with the given players and pre-populate each team with at least 1 player each
 //  hubot futsal get stats <player> - Get win/draw/loss stats for an individual player
+//  hubot futsal set stats <player> <wins>,<draws>,<losses> - Set win/draw/loss stats for an individual player
 //  hubot futsal show ranking - Get current futsal rankings based on previous matches
 //
 //Author:
@@ -168,10 +169,15 @@ module.exports = function(robot) {
 		});
 	}
 
-	function teamup(msg, players, team1, team2) {
+	function teamup(msg, players, team1, team2, type) {
 
-		// use ranking to sort players
-		sortPlayers(msg, players);
+		if (type === "random") {
+			// random sort
+			shuffle(players);
+		} else {
+			// sort based on ranking
+			sortPlayers(msg, players);
+		}
 
 		// set up teams with the following distribution:
 		// 1. first player goes to team A
@@ -179,7 +185,9 @@ module.exports = function(robot) {
 		// 3. players #4 and #5 go to team A
 		// 4. ... and so on, until all players are placed in teams
 		var teams = [team1, team2];
-		for (var player = 0, team = Math.floor(Math.random() * 2); player < players.length; player++) {
+		var team = team1.length == team2.length ? Math.floor(Math.random() * 2) :
+			team1.length > team2.length ? 1 : 0;
+		for (var player = 0; player < players.length; player++) {
 			teams[team].push(players[player]);
 			var otherTeam = (team + 1) % 2;
 			if (teams[team].length > teams[otherTeam].length) {
@@ -206,14 +214,15 @@ module.exports = function(robot) {
 
     robot.respond(/teamup (.+)/i, function(msg) {
       var players = msg.match[1].split(/\s?,\s?/);
-      teamup(msg, players, [], []);
+      teamup(msg, players, [], [], "ranking");
     });
 
-    robot.respond(/futsal teamup players=(.+) team1=(.+) team2=(.+)/i, function(msg) {
+    robot.respond(/futsal teamup players=(.+) team1=(.+) team2=(.+) type=(.+)?/i, function(msg) {
       var players = msg.match[1].split(/\s?,\s?/);
       var team1 = msg.match[2].split(/\s?,\s?/);
       var team2 = msg.match[3].split(/\s?,\s?/);
-      teamup(msg, players, team1, team2);
+      var type = msg.match[4];
+      teamup(msg, players, team1, team2, type);
     });
 
     robot.respond(/futsal debug get stats/i, function(msg) {
@@ -260,6 +269,7 @@ module.exports = function(robot) {
 				players.push(u);
 			}
 		}
+
 		// sort players according to their ranking
 		sortPlayers(msg, players);
 		var ranking = [];
