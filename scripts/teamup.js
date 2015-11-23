@@ -97,29 +97,54 @@ module.exports = function(robot) {
         return alias;
     }
 
-	// TODO: implement persistent stats
-	var stats = {
-		"am":[1,1,1],
-		"jr":[0,0,1],
-		"rf":[2,1,0],
-		"jb":[1,0,0],
-		"pd":[0,0,2],
-		"rg":[1,1,1],
-		"jc":[1,1,0],
-		"jm":[0,1,2],
-		"sa":[1,0,1],
-		"sd":[1,0,0]
-	};
-    function getStats(user) {
-        if (user in stats) {
-            return stats[user];
-        } else {
-            return [0, 0, 0];
-        }
+	function getAllStats(msg) {
+    	var statsString = msg.robot.brain.get("futsal/stats");
+    	var stats = JSON.parse(statsString);
+    	if(Object.prototype.toString.call(stats) === '[object Object]') {
+    		return stats;
+    	}
+		if (stats !== null) {
+			msg.send("Clearing badly formatted stats data: " + JSON.stringify(stats));
+		}
+		return {};
+	}
+
+	function setAllStats(msg, stats) {
+		if(!Object.prototype.toString.call(stats) === '[object Object]') {
+			msg.send("Clearing badly formatted stats data: " + JSON.stringify(stats));
+			stats = {};
+		}
+		msg.robot.brain.set("futsal/stats", JSON.stringify(stats));
+	}
+
+	function getStats(msg, user) {
+		var stats = getAllStats(msg)[user];
+		if(Object.prototype.toString.call(stats) === '[object Array]' && stats.length == 3) {
+			return stats;
+		}
+		if (stats === undefined) {
+			stats = [0, 0, 0];
+		} else {
+			msg.send("Invalid format for stats: " + JSON.stringify(stats));
+			stats = [0, 0, 0];
+			msg.send("Replacing with: " + JSON.stringify(stats));
+		}
+		return stats;
+	}
+
+    function setStats(msg, user, stats) {
+		if(Object.prototype.toString.call(stats) !== '[object Array]' || stats.length != 3) {
+			msg.send("Invalid format for stats: " + JSON.stringify(stats));
+			stats = [0, 0, 0];
+			msg.send("Replacing with: " + JSON.stringify(stats));
+		}
+		var allStats = getAllStats(msg);
+   		allStats[user] = stats;
+   		setAllStats(msg, allStats);
     }
 
-	function getPlayerScore(user) {
-		var stats = getStats(user);
+	function getPlayerScore(msg, user) {
+		var stats = getStats(msg, user);
 		// simpler scoring: 3 points for victories, 1 point for draws, 0 points for losses
 		// return stats[0] * 3 + stats[1] * 1;
 		var played = stats[0] + stats[1] + stats[2];
@@ -128,13 +153,13 @@ module.exports = function(robot) {
 		}
 		var winLossBalance = stats[0] - stats[2];
 		var winRatio = stats[0] / played;
-		return winLossBalance * 10 + winRatio;
+		return winLossBalance + winRatio / 10;
 	}
 
-	function sortPlayers(players) {
+	function sortPlayers(msg, players) {
 		players.sort(function (player1, player2) {
-			var score1 = getPlayerScore(player1);
-			var score2 = getPlayerScore(player2);
+			var score1 = getPlayerScore(msg, player1);
+			var score2 = getPlayerScore(msg, player2);
 			if (score1 == score2) {
 				// randomize order for players with the same score
 				return Math.floor(Math.random() * 3);
@@ -146,7 +171,7 @@ module.exports = function(robot) {
 	function teamup(msg, players, team1, team2) {
 
 		// use ranking to sort players
-		sortPlayers(players);
+		sortPlayers(msg, players);
 
 		// set up teams with the following distribution:
 		// 1. first player goes to team A
@@ -191,45 +216,72 @@ module.exports = function(robot) {
       teamup(msg, players, team1, team2);
     });
 
+    robot.respond(/futsal debug get stats/i, function(msg) {
+      var stats = getAllStats(msg);
+      msg.send("Futsal stats:\n" + JSON.stringify(stats));
+    });
+
+    robot.respond(/futsal debug set stats (.+)/i, function(msg) {
+      var stats = msg.match[1];
+      setAllStats(msg, JSON.parse(stats));
+      msg.send("Futsal stats saved:\n" + JSON.stringify(getAllStats(msg)));
+    });
+
     robot.respond(/futsal (show|get) stats (.+)/i, function(msg) {
       var player = msg.match[2];
-      var stats = getStats(player);
+      var stats = getStats(msg, player);
       msg.send(getName(player) + ": " + stats[0] + " wins " + stats[1] + " draws " + stats[2] + " losses");
     });
 
-	robot.respond(/futsal (.+) ranking/i, function(msg) {
+    robot.respond(/futsal set stats (.+) (\d+),(\d+),(\d+)/i, function(msg) {
+      var player = msg.match[1];
+      var wins = msg.match[2];
+      var draws = msg.match[3];
+      var losses = msg.match[4];
+      var stats = [wins, draws, losses];
+      setStats(msg, player, stats);
+      msg.send("Stats saved for " + player + ": " + stats[0] + " wins " + stats[1] + " draws " + stats[2] + " losses");
+    });
+
+	robot.respond(/futsal (.+ )?ranking/i, function(msg) {
 		var players = [];
 		var action = msg.match[1];
-		if (action != "show" && action != "debug") {
-			msg.send("Invalid action: '" + action + "'\nUsing 'show' instead.");
-			action = "show";
+		if (action != "show " && action != "debug ") {
+			if (action !== undefined) {
+				msg.send("Invalid action: ' " + action + "'\nUsing ' show ' instead.");
+			}
+			action = "show ";
 		}
 		for (var i = 0; i < users.length; i++) {
 			var u = users[i][0][0];
-			var s = getStats(u);
+			var s = getStats(msg, u);
 			// only show players with at least 1 match played
 			if (s[0] + s[1] + s[2] > 0) {
 				players.push(u);
 			}
 		}
 		// sort players according to their ranking
-		sortPlayers(players);
+		sortPlayers(msg, players);
 		var ranking = [];
 		var lastScore = 999999999999;
 		for (var i = 0, rank = 0; i < players.length; i++) {
 			var player = players[i];
-			var score = getPlayerScore(player);
+			var score = getPlayerScore(msg, player);
 			if (score != lastScore) {
 				rank = i + 1;
 			}
 			var rankLine = "#" + rank + " " + getName(player);
-			if (action == "debug") {
+			if (action == "debug ") {
 				rankLine += " " + score;
 			}
 			ranking.push(rankLine);
 			lastScore = score;
 		}
-		msg.send(ranking.join("\n"));
+		if (ranking.length > 0) {
+			msg.send(ranking.join("\n"));
+		} else {
+			msg.send("There are currently no players statistics available.");
+		}
 	});
 
 };
