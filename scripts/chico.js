@@ -149,13 +149,13 @@ module.exports = function(robot) {
       case 8:
       case 9:
         if (_in) {
-          sendMessage(msg, in_normal, 0.15);
+          sendMessage(msg, in_normal, 0.1);
         }
         break;
       case 10:
       case 11:
         if (_in && !explanation) {
-          sendMessage(msg, in_late, 0.666666);
+          sendMessage(msg, in_late, 0.25);
         }
         break;
       case 12:
@@ -172,7 +172,7 @@ module.exports = function(robot) {
           if (explanation) {
             sendMessage(msg, out_normal, 0.1);
           } else {
-            sendMessage(msg, out_early, 0.3333333);
+            sendMessage(msg, out_early, 0.25);
           }
         }
         break;
