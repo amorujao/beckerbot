@@ -90,7 +90,7 @@ module.exports = function(robot) {
       return;
     }
 
-    sendMessage(msg, ["http://media.giphy.com/media/JDKxRN0Bvmm2c/giphy.gif", "http://www.reactiongifs.us/wp-content/uploads/2013/06/ill_be_back_terminator.gif"]);
+    sendMessage(msg, ["http://media.giphy.com/media/JDKxRN0Bvmm2c/giphy.gif", "http://www.reactiongifs.us/wp-content/uploads/2013/06/ill_be_back_terminator.gif"], 0.1);
   });
 
   robot.hear(/^((?!i.?ll).)*be back in/i, function(msg) {
@@ -116,7 +116,7 @@ module.exports = function(robot) {
     }
 
     if (text.search(/doente|sick|medico|médico|doctor/i) >= 0) {
-      sendMessage(msg, jd, 0.3333);
+      sendMessage(msg, jd, 0.2);
       return;
     } else if (text.search(/\ball in\b/i) >= 0) {
       sendMessage(msg, ["http://www.pokerdictionary.net/wp-content/uploads/2013/01/poker_face.png"]);
