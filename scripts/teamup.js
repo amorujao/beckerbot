@@ -27,6 +27,7 @@ module.exports = function(robot) {
 	[["cb", "barbosa"], ["Captain Barbossa"]],
 	[["cs", "silva"], ["Carlos Fucking Silva"]],
 	[["ja", "joana araujo"], ["Joana Araujo"]],
+	[["jd", "jose duraes"], ["José Durães"]],
 	[["jm", "joao", "joão"], ["John The Rock Macedo"]],
 	[["joao morais", "joão morais", "morais"], ["João Morais"]],
 	[["jb", "jorge", "batista", "baptista", "jorge batista", "jorge baptista"], ["Jorge o Mágico", "Magic Jorge XXL"]],
