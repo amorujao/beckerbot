@@ -32,7 +32,7 @@ module.exports = function(robot) {
 	[["joao morais", "joão morais", "morais"], ["João Morais"]],
 	[["jb", "jorge", "batista", "baptista", "jorge batista", "jorge baptista"], ["Jorge o Mágico", "Magic Jorge XXL"]],
 	[["jc", "jose carlos", "josé carlos", "ze carlos", "zé carlos", "medeiros"], ["José Carlos"]],
-	[["jr", "jose", "josé", "jose ribeiro", "josé ribeiro"], ["Zé Maxi Ribeiro"]],
+	[["jr", "jose", "josé", "jose ribeiro", "josé ribeiro"], ["Zé Maxi Ribeiro", "Zé Payet Ribeiro"]],
 	[["ju", "joana", "cerejo", "joana cerejo"], ["Joana Cerejo"]],
 	[["ns", "nuno"], ["Nuno"]],
 	[["pd", "paulo", "dias", "paulo dias"], ["Paulo"]],
