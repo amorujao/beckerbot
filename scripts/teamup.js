@@ -37,6 +37,7 @@ module.exports = function(robot) {
 	[["ns", "nuno"], ["Nuno"]],
 	[["pd", "paulo", "dias", "paulo dias"], ["Paulo"]],
 	[["pp", "pinho", "paulo pinho"], ["Paulo Pinho"]],
+	[["pv", "pedro", "vieira", "pedro vieira"], ["Pedro Vieira"]],
 	[["rg", "ricardo", "gomes", "ricardo gomes"], ["Ricardo Cheetah Gomes"]],
 	[["rf", "rui ferreira", "ferreira"], ["Rui Ferreira"]],
 	[["rt", "rui torres"], ["Rui Torres"]],
