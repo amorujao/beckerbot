@@ -36,7 +36,7 @@ module.exports = function(robot) {
 	[["ju", "joana", "cerejo", "joana cerejo"], ["Joana Cerejo"]],
 	[["ns", "nuno"], ["Nuno"]],
 	[["pd", "paulo", "dias", "paulo dias"], ["Paulo"]],
-	[["pp", "pinho", "paulo pinho"], ["Paulo Pinho"]],
+	//[["pp", "pinho", "paulo pinho"], ["Paulo Pinho"]],
 	[["pv", "pedro", "vieira", "pedro vieira"], ["Pedro Vieira"]],
 	[["rg", "ricardo", "gomes", "ricardo gomes"], ["Ricardo Cheetah Gomes"]],
 	[["rf", "rui ferreira", "ferreira"], ["Rui Ferreira"]],
@@ -270,8 +270,8 @@ module.exports = function(robot) {
 		for (var i = 0; i < users.length; i++) {
 			var u = users[i][0][0];
 			var s = getStats(msg, u);
-			// only show players with at least 1 match played
-			if (s[0] + s[1] + s[2] > 0) {
+			// only show players with at least 2 matches played
+			if (s[0] + s[1] + s[2] > 1) {
 				players.push(u);
 			}
 		}
