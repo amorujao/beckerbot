@@ -23,7 +23,7 @@ module.exports = function(robot) {
 	// <aliases>: array of names to be matched
 	// <nicknames>: array of nicknames to use for player (one will be picked at random)
 	var users = [
-	[["am", "andre", "andré"], ["André"]],
+	[["am", "andre", "andré"], ["André Morujão"]],
 	[["cb", "barbosa"], ["Captain Barbossa"]],
 	[["cs", "silva"], ["Carlos Fucking Silva"]],
 	[["ja", "joana araujo"], ["Joana Araujo"]],
@@ -34,8 +34,8 @@ module.exports = function(robot) {
 	[["jc", "jose carlos", "josé carlos", "ze carlos", "zé carlos", "medeiros"], ["José Carlos"]],
 	[["jr", "jose", "josé", "jose ribeiro", "josé ribeiro"], ["Zé Maxi Ribeiro", "Zé Payet Ribeiro"]],
 	[["ju", "joana", "cerejo", "joana cerejo"], ["Joana Cerejo"]],
-	[["ns", "nuno"], ["Nuno"]],
-	[["pd", "paulo", "dias", "paulo dias"], ["Paulo"]],
+	[["ns", "nuno", "nuno sousa"], ["Nuno Sousa"]],
+	[["pd", "paulo", "dias", "paulo dias"], ["Paulo Dias"]],
 	//[["pp", "pinho", "paulo pinho"], ["Paulo Pinho"]],
 	[["pv", "pedro", "vieira", "pedro vieira"], ["Pedro Vieira"]],
 	[["rg", "ricardo", "gomes", "ricardo gomes"], ["Ricardo Cheetah Gomes"]],
@@ -44,7 +44,7 @@ module.exports = function(robot) {
 	[["rp", "rui pereira", "milks"], ["Milks"]],
 	[["sa", "sergio azevedo", "sérgio azevedo", "azevedo"], ["Sérgio Azevedo"]],
 	//[["sd", "sergio dias", "sérgio dias"], ["Sérgio El Gato Dias", "Sérgio Zlatan Dias", "Sérgio Higuita Dias", "Sérgio El Kitty Dias"]],
-	[["vt", "vasco"], ["Vasco"]],
+	//[["vt", "vasco"], ["Vasco"]],
     ];
 
 	var teamPairs = [
