@@ -26,6 +26,7 @@ module.exports = function(robot) {
 	[["am", "andre", "andré"], ["André Morujão"]],
 	[["cb", "barbosa"], ["Captain Barbossa"]],
 	[["cs", "silva"], ["Carlos Fucking Silva"]],
+	[["gs", "guilherme", "saraiva", "guilherme saraiva"], ["Guilherme Saraiva"]],
 	[["ja", "joana araujo"], ["Joana Araujo"]],
 	[["jd", "jose duraes"], ["José Durães"]],
 	[["jm", "joao", "joão"], ["John The Rock Macedo"]],
