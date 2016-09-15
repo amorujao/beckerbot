@@ -149,20 +149,20 @@ module.exports = function(robot) {
       case 8:
       case 9:
         if (_in) {
-          sendMessage(msg, in_normal, 0.1);
+          sendMessage(msg, in_normal, 0.05);
         }
         break;
       case 10:
       case 11:
         if (_in && !explanation) {
-          sendMessage(msg, in_late, 0.25);
+          sendMessage(msg, in_late, 0.1);
         }
         break;
       case 12:
       case 13:
       case 14:
         if (_out && text.search(/lunch|almoc|almoç/i) >= 0) {
-          sendMessage(msg, out_lunch, 0.5);
+          sendMessage(msg, out_lunch, 0.1);
         }
         break;
       case 15:
@@ -170,9 +170,9 @@ module.exports = function(robot) {
       case 17:
         if (_out) {
           if (explanation) {
-            sendMessage(msg, out_normal, 0.1);
+            sendMessage(msg, out_normal, 0.05);
           } else {
-            sendMessage(msg, out_early, 0.25);
+            sendMessage(msg, out_early, 0.1);
           }
         }
         break;
