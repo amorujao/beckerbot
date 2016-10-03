@@ -272,7 +272,7 @@ module.exports = function(robot) {
 			var u = users[i][0][0];
 			var s = getStats(msg, u);
 			// only show players with at least 2 matches played
-			if ((s[0] + s[1] + s[2]) > 1) {
+			if ((s[0] + s[1] + s[2]) >= 2) {
 				players.push(u);
 			}
 		}
