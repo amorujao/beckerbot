@@ -109,7 +109,7 @@ module.exports = function(robot) {
     	var statsString = msg.robot.brain.get("futsal/stats");
     	var stats = JSON.parse(statsString);
     	if(Object.prototype.toString.call(stats) === '[object Object]') {
-    		return [parseInt(stats[0]), parseInt(stats[1]), parseInt(stats[2])];
+    		return stats;
     	}
 		if (stats !== null) {
 			msg.send("Clearing badly formatted stats data: " + JSON.stringify(stats));
