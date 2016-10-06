@@ -174,7 +174,7 @@ module.exports = function(robot) {
 			}
 			if (score1 == score2) {
 				// randomize order for players with the same score
-				return Math.floor(Math.random() * 3);
+				return Math.floor((Math.random() * 3) + 1) - 2;
 			}
 			return score2 - score1;
 		});
