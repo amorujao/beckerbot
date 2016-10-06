@@ -75,7 +75,7 @@ module.exports = function(robot) {
 	["Dinocroc", "Supergator"],
 	["Komodo", "Cobra"],//technically these would also fit the animals category
 	["Piranhaconda", "Frankenfish"],
-	
+
 	// funny modified versions of real teams
 	["Borussia D'outro mundo", "Bayern Mugido", "http://blogstorage.s3.amazonaws.com/upload/SportsBlogcom/1133065/0880132001443811880_filepicker.jpg"],
 	["Arse 'n' all", "Aston Vanilla", "http://www.arsenalinsider.com/wp-content/uploads/2013/08/arsenal-aston-villa-premiership-opener.jpg"],
@@ -128,7 +128,7 @@ module.exports = function(robot) {
 	function getStats(msg, user) {
 		var stats = getAllStats(msg)[user];
 		if(Object.prototype.toString.call(stats) === '[object Array]' && stats.length == 3) {
-			return stats;
+			return [parseInt(stats[0]), parseInt(stats[1]), parseInt(stats[2])];
 		}
 		if (stats === undefined) {
 			stats = [0, 0, 0];
