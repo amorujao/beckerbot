@@ -164,10 +164,14 @@ module.exports = function(robot) {
 		return winLossBalance + winRatio / 10;
 	}
 
-	function sortPlayers(msg, players) {
+	function sortPlayers(msg, players, randomizePartialTies) {
 		players.sort(function (player1, player2) {
 			var score1 = getPlayerScore(msg, player1);
 			var score2 = getPlayerScore(msg, player2);
+			if (randomizePartialTies) {
+				score1 = Math.floor(score1);
+				score2 = Math.floor(score2);
+			}
 			if (score1 == score2) {
 				// randomize order for players with the same score
 				return Math.floor(Math.random() * 3);
@@ -183,7 +187,7 @@ module.exports = function(robot) {
 			shuffle(players);
 		} else {
 			// sort based on ranking
-			sortPlayers(msg, players);
+			sortPlayers(msg, players, true);
 		}
 
 		// set up teams with the following distribution:
@@ -278,19 +282,20 @@ module.exports = function(robot) {
 		}
 
 		// sort players according to their ranking
-		sortPlayers(msg, players);
+		sortPlayers(msg, players, false);
 		var ranking = [];
 		var lastScore = 999999999999;
 		for (var i = 0, rank = 0; i < players.length; i++) {
 			var player = players[i];
-			var score = getPlayerScore(msg, player);
+			var score = Math.floor(getPlayerScore(msg, player));
 			if (score != lastScore) {
 				rank = i + 1;
 			}
-			var rankLine = "#" + rank + " " + getName(player);
+			var rankLine = "#" + rank + " (";
+			rankLine += (score > 0 ? "+" : "") + score + ") " + getName(player);
 			if (action == "debug ") {
 				var stats = getStats(msg, player);
-				rankLine += " W:" + stats[0] + " D:" + stats[1] + " L:" + stats[2] + " " + score;
+				rankLine += " W:" + stats[0] + " D:" + stats[1] + " L:" + stats[2];
 			}
 			ranking.push(rankLine);
 			lastScore = score;
