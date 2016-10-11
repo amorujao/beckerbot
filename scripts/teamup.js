@@ -8,44 +8,69 @@
 //  None
 //
 //Commands:
-//  hubot teamup <players> - Create two teams with comma separated players (to use rankings/nicknames, use player initials)
+//  hubot teamup <players> - Create two teams with comma separated players (equivalent to: futsal teamup=<players> team1=<none> team2=<none> type=ranking)
 //  hubot futsal teamup=<players> team1=<team 1 players> team2=<team 2 players> type=<random|ranking>- Create two teams with the given players and pre-populate each team with at least 1 player each
-//  hubot futsal get stats <player> - Get win/draw/loss stats for an individual player
-//  hubot futsal set stats <player> <wins>,<draws>,<losses> - Set win/draw/loss stats for an individual player
-//  hubot futsal show ranking - Get current futsal rankings based on previous matches
+//  hubot futsal rank all - Get futsal rankings based on all past matches
+//  hubot futsal rank last <N> - Get futsal rankings based on the last N matches
+//  hubot futsal rank detailed - Get futsal rankings with number of wins / draws / losses for each player
+//  hubot futsal stats <player> - Get futsal statistics for <player>
+//  hubot futsal stats all - Get futsal statistics for all players
+//  hubot futsal matches - Get the list of all past matches
+//  hubot futsal last match - Get the details for the last recorded match
 //
 //Author:
 //  rferreira
 
 module.exports = function(robot) {
 
-	// each item: [<aliases>, <nicknames>]
+	// each item: {date:"YYYY-MM-DD", players:[[<team 1 players],[<team 2 players>]], score:[<team 1 goals>, <team 2 goals>]}
+	var matches = [
+		{date:"2015-11-16", players:[["rf", "Sérgio Dias", "am", "Alcobaça", "jc"],["rg", "jm", "sa", "jr", "pd"]], score:[14, 7]},
+		{date:"2015-11-23", players:[["rf", "Sérgio Dias", "am", "Alcobaça", "jc"],["rg", "jm", "sa", "jr", "pd"]], score:[7, 3]},
+		{date:"2015-11-30", players:[["am", "rg", "Sérgio Dias", "jm"],["jc", "jr", "pd", "sa"]], score:[7, 12]},
+		{date:"2016-01-12", players:[["Sérgio Dias", "ja", "jc", "pd", "rg"],["sa", "rf", "ju", "jr", "jm"]], score:[12, 10]},
+		{date:"2016-05-02", players:[["rf", "rg", "Rui Sousa", "ns"],["jr", "am", "Rui Brito", "jm"]], score:[14, 7]},
+		{date:"2016-05-09", players:[["rf", "rg", "sa", "Alcobaça"],["jr", "am", "jm", "ns"]], score:[18, 10]},
+		{date:"2016-05-17", players:[["rf", "rg", "sa", "ns"],["am", "Alcobaça", "Estrilho", "Fontela"]], score:[14, 12]},
+		{date:"2016-05-23", players:[["am", "Estrilho", "jc", "jr"],["sa", "jm", "Alcobaça", "rp"]], score:[11, 13]},
+		{date:"2016-06-13", players:[["am", "Estrilho", "jc", "jr", "Alcobaça"],["sa", "jm", "Fontela", "rp", "ns"]], score:[9, 9]},
+		{date:"2016-06-20", players:[["am", "Estrilho", "jr", "sa"],["jm", "Fontela", "rp", "rg"]], score:[13, 15]},
+		{date:"2016-07-19", players:[["am", "jd", "jb", "sa"],["jm", "jr", "Fontela", "ns"]], score:[9, 10]},
+		{date:"2016-08-22", players:[["am", "jd", "rf", "pv", "jc"],["jm", "rp", "jr", "ns"]], score:[9, 10]},
+		{date:"2016-08-29", players:[["am", "rf", "jc", "Rui Sousa"],["jm", "rp", "jr", "ns"]], score:[11, 13]},
+		{date:"2016-09-05", players:[["am", "jm", "ns", "pv"],["jr", "rp", "jc", "jd"]], score:[14, 8]},
+		{date:"2016-09-12", players:[["am", "jm", "ns", "sa"],["jr", "jc", "jd", "pv"]], score:[11, 6]},
+		{date:"2016-09-19", players:[["am", "rf", "rg", "jm"],["ns", "jc", "pv", "sa"]], score:[13, 11]},
+		{date:"2016-09-26", players:[["am", "rf", "jm", "rp", "pv"],["ns", "jc", "sa", "jd", "Alcobaça"]], score:[15, 7]},
+		{date:"2016-10-03", players:[["am", "rp", "pv", "jc", "sa"],["rf", "ns", "jr", "jd"]], score:[13, 6]},
+		{date:"2016-10-10", players:[["am", "jd", "pv", "Tiago Ferreira"],["jr", "ns", "rp", "jc"]], score:[6, 6]}
+	];
+
+	// each item: [<aliases>, <nicknames>, <short name>]
 	// <aliases>: array of names to be matched
 	// <nicknames>: array of nicknames to use for player (one will be picked at random)
+	// <single name>: shortest version of the player's name that uniquely identifies him/her'
 	var users = [
-	[["am", "andre", "andré"], ["André Morujão"]],
-	[["cb", "barbosa"], ["Captain Barbossa"]],
-	[["cs", "silva"], ["Carlos Fucking Silva"]],
-	[["gs", "guilherme", "saraiva", "guilherme saraiva"], ["Guilherme Saraiva"]],
-	[["ja", "joana araujo"], ["Joana Araujo"]],
-	[["jd", "jose duraes"], ["José Durães"]],
-	[["jm", "joao", "joão"], ["John The Rock Macedo"]],
-	[["joao morais", "joão morais", "morais"], ["João Morais"]],
-	[["jb", "jorge", "batista", "baptista", "jorge batista", "jorge baptista"], ["Jorge o Mágico", "Magic Jorge XXL"]],
-	[["jc", "jose carlos", "josé carlos", "ze carlos", "zé carlos", "medeiros"], ["José Carlos"]],
-	[["jr", "jose", "josé", "jose ribeiro", "josé ribeiro"], ["Zé Maxi Ribeiro", "Zé Payet Ribeiro"]],
-	[["ju", "joana", "cerejo", "joana cerejo"], ["Joana Cerejo"]],
-	[["ns", "nuno", "nuno sousa"], ["Nuno Sousa"]],
-	[["pd", "paulo", "dias", "paulo dias"], ["Paulo Dias"]],
-	//[["pp", "pinho", "paulo pinho"], ["Paulo Pinho"]],
-	[["pv", "pedro", "vieira", "pedro vieira"], ["Pedro Vieira"]],
-	[["rg", "ricardo", "gomes", "ricardo gomes"], ["Ricardo Cheetah Gomes"]],
-	[["rf", "rui ferreira", "ferreira"], ["Rui Ferreira"]],
-	[["rt", "rui torres"], ["Rui Torres"]],
-	[["rp", "rui pereira", "milks"], ["Milks"]],
-	[["sa", "sergio azevedo", "sérgio azevedo", "azevedo"], ["Sérgio Azevedo"]],
-	//[["sd", "sergio dias", "sérgio dias"], ["Sérgio El Gato Dias", "Sérgio Zlatan Dias", "Sérgio Higuita Dias", "Sérgio El Kitty Dias"]],
-	//[["vt", "vasco"], ["Vasco"]],
+	[["am", "andre", "andré"], ["André Morujão"], "André"],
+	[["cb", "barbosa"], ["Captain Barbossa"], "Barbosa"],
+	[["cs", "silva"], ["Carlos Fucking Silva"], "Silva"],
+	[["gs", "guilherme", "saraiva", "guilherme saraiva"], ["Guilherme Saraiva"], "Guilherme"],
+	[["ja", "joana araujo"], ["Joana Araujo"], "Joana Araújo"],
+	[["jd", "jose duraes"], ["José Durães"], "Durães"],
+	[["jm", "joao", "joão"], ["John The Rock Macedo"], "João"],
+	[["joao morais", "joão morais", "morais"], ["João Morais"], "Morais"],
+	[["jb", "jorge", "batista", "baptista", "jorge batista", "jorge baptista"], ["Jorge o Mágico", "Magic Jorge XXL"], "Jorge"],
+	[["jc", "jose carlos", "josé carlos", "ze carlos", "zé carlos", "medeiros"], ["José Carlos"], "Zé Carlos"],
+	[["jr", "jose", "josé", "jose ribeiro", "josé ribeiro"], ["Zé Maxi Ribeiro", "Zé Payet Ribeiro"], "Zé Ribeiro"],
+	[["ju", "joana", "cerejo", "joana cerejo"], ["Joana Cerejo"], "Cerejo"],
+	[["ns", "nuno", "nuno sousa"], ["Nuno Sousa"], "Nuno"],
+	[["pd", "paulo", "dias", "paulo dias"], ["Paulo Dias"], "Paulo"],
+	[["pv", "pedro", "vieira", "pedro vieira"], ["Pedro Vieira"], "Pedro"],
+	[["rg", "ricardo", "gomes", "ricardo gomes"], ["Ricardo Cheetah Gomes"], "Ricardo"],
+	[["rf", "rui ferreira", "ferreira"], ["Rui Ferreira"], "Rui"],
+	[["rt", "rui torres"], ["Rui Torres"], "Torres"],
+	[["rp", "rui pereira", "milks"], ["Milks"], "Milks"],
+	[["sa", "sergio azevedo", "sérgio azevedo", "azevedo"], ["Sérgio Azevedo"], "Sérgio"],
     ];
 
 	var teamPairs = [
@@ -90,7 +115,7 @@ module.exports = function(robot) {
         for(var j, x, i = arr.length; i; j = Math.floor(Math.random() * i), x = arr[--i], arr[i] = arr[j], arr[j] = x);
     };
 
-	function getName(alias) {
+	function getRandomNickname(alias) {
 		var aliasLowerCase = alias.toLowerCase();
         for (var i = 0; i < users.length; i++) {
             var nicks = users[i];
@@ -105,54 +130,22 @@ module.exports = function(robot) {
         return alias;
     }
 
-	function getAllStats(msg) {
-    	var statsString = msg.robot.brain.get("futsal/stats");
-    	var stats = JSON.parse(statsString);
-    	if(Object.prototype.toString.call(stats) === '[object Object]') {
-    		return stats;
-    	}
-		if (stats !== null) {
-			msg.send("Clearing badly formatted stats data: " + JSON.stringify(stats));
-		}
-		return {};
-	}
-
-	function setAllStats(msg, stats) {
-		if(!Object.prototype.toString.call(stats) === '[object Object]') {
-			msg.send("Clearing badly formatted stats data: " + JSON.stringify(stats));
-			stats = {};
-		}
-		msg.robot.brain.set("futsal/stats", JSON.stringify(stats));
-	}
-
-	function getStats(msg, user) {
-		var stats = getAllStats(msg)[user];
-		if(Object.prototype.toString.call(stats) === '[object Array]' && stats.length == 3) {
-			return [parseInt(stats[0]), parseInt(stats[1]), parseInt(stats[2])];
-		}
-		if (stats === undefined) {
-			stats = [0, 0, 0];
-		} else {
-			msg.send("Invalid format for stats: " + JSON.stringify(stats));
-			stats = [0, 0, 0];
-			msg.send("Replacing with: " + JSON.stringify(stats));
-		}
-		return stats;
-	}
-
-    function setStats(msg, user, stats) {
-		if(Object.prototype.toString.call(stats) !== '[object Array]' || stats.length != 3) {
-			msg.send("Invalid format for stats: " + JSON.stringify(stats));
-			stats = [0, 0, 0];
-			msg.send("Replacing with: " + JSON.stringify(stats));
-		}
-		var allStats = getAllStats(msg);
-   		allStats[user] = stats;
-   		setAllStats(msg, allStats);
+	function getPlayerShortName(alias) {
+		var aliasLowerCase = alias.toLowerCase();
+        for (var i = 0; i < users.length; i++) {
+            var nicks = users[i];
+            var names = nicks[0];
+            for (var j = 0; j < names.length; j++) {
+                if (aliasLowerCase === names[j]) {
+					return nicks[2];
+                }
+            }
+        }
+        return alias;
     }
 
-	function getPlayerScore(msg, user) {
-		var stats = getStats(msg, user);
+	function getPlayerScore(msg, user, numberOfMatches) {
+		var stats = getStats(msg, user, numberOfMatches);
 		// simpler scoring: 3 points for victories, 1 point for draws, 0 points for losses
 		// return stats[0] * 3 + stats[1] * 1;
 		var played = stats[0] + stats[1] + stats[2];
@@ -164,10 +157,10 @@ module.exports = function(robot) {
 		return winLossBalance + winRatio / 10;
 	}
 
-	function sortPlayers(msg, players, randomizePartialTies) {
+	function sortPlayers(msg, players, randomizePartialTies, numberOfMatches) {
 		players.sort(function (player1, player2) {
-			var score1 = getPlayerScore(msg, player1);
-			var score2 = getPlayerScore(msg, player2);
+			var score1 = getPlayerScore(msg, player1, numberOfMatches);
+			var score2 = getPlayerScore(msg, player2, numberOfMatches);
 			if (randomizePartialTies) {
 				score1 = Math.floor(score1);
 				score2 = Math.floor(score2);
@@ -180,14 +173,15 @@ module.exports = function(robot) {
 		});
 	}
 
-	function teamup(msg, players, team1, team2, type) {
+	function teamup(msg, players, team1, team2, type, numberOfMatches) {
 
+		//TODO: add type for: 2 top + 2 bottom for one team, 4 in the middle for the other team 
 		if (type === "random") {
 			// random sort
 			shuffle(players);
 		} else {
 			// sort based on ranking
-			sortPlayers(msg, players, true);
+			sortPlayers(msg, players, true, 9999);
 		}
 
 		// set up teams with the following distribution:
@@ -209,7 +203,7 @@ module.exports = function(robot) {
         // replace aliases with nicknames
 		for (var t = 0; t < teams.length; t++) {
 			for (var p = 0; p < teams[t].length; p++) {
-				teams[t][p] = getName(teams[t][p]);
+				teams[t][p] = getRandomNickname(teams[t][p]);
 			}
 		}
 
@@ -217,15 +211,97 @@ module.exports = function(robot) {
         var teamNames = teamPairs[Math.floor(Math.random() * teamPairs.length)];
 
         // display teams & players
-        if (teamNames.length == 3) {
+        if (teamNames.length == 3) {// only some of the team pairs have an image to go with it (on item [2])
             msg.send(teamNames[2]);
         }
         msg.send(":soccer: *" + teamNames[0] + "*: " + teams[0].join(", ") + "\n:shirt: *" + teamNames[1] + "*: " + teams[1].join(", "));
     };
 
+	function getMatchString(msg, match) {
+
+		var message = match.date;
+		var players = [];
+		for (var player = 0; player < match.players[0].length; player++) {
+			players.push(getPlayerShortName(match.players[0][player]));
+		}
+		message += " [" + players.join(", ") + "] " + match.score[0];
+		message += " - ";
+		players = [];
+		for (var player = 0; player < match.players[1].length; player++) {
+			players.push(getPlayerShortName(match.players[1][player]));
+		}
+		message += match.score[1] + " [" + players.join(", ") + "]";
+		return message;
+	}
+
+	function getStats(msg, user, match_count) {
+
+		var stats = [0, 0, 0];// wins, draws, losses
+		for (var m = ((match_count <= 0 || match_count > matches.length) ? 0 : (matches.length - match_count)); m < matches.length; m++) {
+			var match = matches[m];
+			var ownScore = -1;
+			var otherScore = -1;
+			if (match.players[0].indexOf(user) > -1) {
+				ownScore = match.score[0];
+				otherScore = match.score[1];
+			} else if (match.players[1].indexOf(user) > -1) {
+				ownScore = match.score[1];
+				otherScore = match.score[0];
+			}
+			if (ownScore >= 0 && otherScore >= 0) {
+				if (ownScore > otherScore) {
+					stats[0]++;
+				} else if (ownScore < otherScore) {
+					stats[2]++;
+				} else {
+					stats[1]++;
+				}
+			}
+		}
+		return stats;
+	}
+
+	function ranking(msg, showDetails, numberOfMatches) {
+
+		var players = [];
+		for (i = 0; i < users.length; i++) {
+			u = users[i][0][0];
+			s = getStats(msg, u, numberOfMatches);
+			if (s[0] + s[1] + s[2] >= 2) {
+				// only include players with at least 2 matches played
+				players.push(u);
+			}
+		}
+
+		// sort players according to their ranking
+		sortPlayers(msg, players, false, numberOfMatches);
+		var ranking = [];
+		var lastScore = 999999999999;
+		for (var i = 0, rank = 0; i < players.length; i++) {
+			var player = players[i];
+			var score = Math.floor(getPlayerScore(msg, player, numberOfMatches));
+			if (score != lastScore) {
+				rank = i + 1;
+			}
+			var rankLine = "#" + rank + " (";
+			rankLine += (score > 0 ? "+" : "") + score + ") " + getPlayerShortName(player);
+			if (showDetails) {
+				var stats = getStats(msg, player, numberOfMatches);
+				rankLine += " W:" + stats[0] + " D:" + stats[1] + " L:" + stats[2];
+			}
+			ranking.push(rankLine);
+			lastScore = score;
+		}
+		if (ranking.length > 0) {
+			msg.send("Ranking based on " + (numberOfMatches > matches.length ? "all" : ("the last " + numberOfMatches)) + " matches (for players with at least 2 matches played):\n" + ranking.join("\n"));
+		} else {
+			msg.send("There are currently no player statistics available.");
+		}
+	}
+
     robot.respond(/teamup (.+)/i, function(msg) {
       var players = msg.match[1].split(/\s?,\s?/);
-      teamup(msg, players, [], [], "ranking");
+      teamup(msg, players, [], [], "ranking", 9999);
     });
 
     robot.respond(/futsal teamup players=(.+) team1=(.+) team2=(.+) type=(.+)?/i, function(msg) {
@@ -233,78 +309,68 @@ module.exports = function(robot) {
       var team1 = msg.match[2].split(/\s?,\s?/);
       var team2 = msg.match[3].split(/\s?,\s?/);
       var type = msg.match[4];
-      teamup(msg, players, team1, team2, type);
+      teamup(msg, players, team1, team2, type, 9999);
     });
 
-    robot.respond(/futsal debug get stats/i, function(msg) {
-      var stats = getAllStats(msg);
-      msg.send("Futsal stats:\n" + JSON.stringify(stats));
-    });
+	robot.respond(/futsal matches/i, function(msg) {
 
-    robot.respond(/futsal debug set stats (.+)/i, function(msg) {
-      var stats = msg.match[1];
-      setAllStats(msg, JSON.parse(stats));
-      msg.send("Futsal stats saved:\n" + JSON.stringify(getAllStats(msg)));
-    });
-
-    robot.respond(/futsal (show|get) stats (.+)/i, function(msg) {
-      var player = msg.match[2];
-      var stats = getStats(msg, player);
-      msg.send(getName(player) + ": " + stats[0] + " wins " + stats[1] + " draws " + stats[2] + " losses");
-    });
-
-    robot.respond(/futsal set stats (.+) (\d+),(\d+),(\d+)/i, function(msg) {
-      var player = msg.match[1];
-      var wins = msg.match[2];
-      var draws = msg.match[3];
-      var losses = msg.match[4];
-      var stats = [wins, draws, losses];
-      setStats(msg, player, stats);
-      msg.send("Stats saved for " + player + ": " + stats[0] + " wins " + stats[1] + " draws " + stats[2] + " losses");
-    });
-
-	robot.respond(/futsal (.+ )?ranking/i, function(msg) {
-		var players = [];
-		var action = msg.match[1];
-		if (action != "show " && action != "debug ") {
-			if (action !== undefined) {
-				msg.send("Invalid action: ' " + action + "'\nUsing ' show ' instead.");
-			}
-			action = "show ";
+		var lines = [];
+		for (var m = 0; m < matches.length; m++) {
+			lines.push(getMatchString(msg, matches[m]));
 		}
-		for (var i = 0; i < users.length; i++) {
-			var u = users[i][0][0];
-			var s = getStats(msg, u);
-			// only show players with at least 2 matches played
-			if ((s[0] + s[1] + s[2]) >= 2) {
-				players.push(u);
-			}
-		}
+		msg.send(lines.join("\n"));
+	});
 
-		// sort players according to their ranking
-		sortPlayers(msg, players, false);
-		var ranking = [];
-		var lastScore = 999999999999;
-		for (var i = 0, rank = 0; i < players.length; i++) {
-			var player = players[i];
-			var score = Math.floor(getPlayerScore(msg, player));
-			if (score != lastScore) {
-				rank = i + 1;
-			}
-			var rankLine = "#" + rank + " (";
-			rankLine += (score > 0 ? "+" : "") + score + ") " + getName(player);
-			if (action == "debug ") {
-				var stats = getStats(msg, player);
-				rankLine += " W:" + stats[0] + " D:" + stats[1] + " L:" + stats[2];
-			}
-			ranking.push(rankLine);
-			lastScore = score;
-		}
-		if (ranking.length > 0) {
-			msg.send(ranking.join("\n"));
+	robot.respond(/futsal last match/i, function(msg) {
+		msg.send(getMatchString(msg, matches[matches.length - 1]));
+	});
+
+	robot.respond(/futsal rank all(( )?time)?/i, function(msg) {
+		ranking(msg, false, 9999);
+	});
+
+	robot.respond(/futsal rank last (\d+)/i, function(msg) {
+		var matchCount = parseInt(msg.match[1]);
+		if (matchCount <= 0) {
+			msg.send("Please enter a positive integer for the match count.");
 		} else {
-			msg.send("There are currently no players statistics available.");
+			ranking(msg, false, matchCount);
 		}
 	});
 
+	robot.respond(/futsal rank detailed/i, function(msg) {
+		ranking(msg, true, 9999);
+	});
+
+	robot.respond(/futsal stats (.+)/i, function(msg) {
+
+		var player = msg.match[1];
+		var players = [];
+		if (player == "all") {
+			for (u = 0; u < users.length; u++) {
+				players.push(users[u][0][0]);
+			}
+		} else {
+			players.push(player);
+		}
+		lines = [];
+		for (p = 0; p < players.length; p++) {
+			pl = players[p];
+			name = getRandomNickname(pl);
+			if (name == pl) {
+				// these are non-Becker players, so we'll ignore them
+				continue;
+			}
+			stats = getStats(msg, pl, 99999);
+			played = stats[0] + stats[1] + stats[2];
+			if (played > 0) {
+				lines.push(getPlayerShortName(pl) + ": " + stats[0] + " wins " + stats[1] + " draws " + stats[2] + " losses");
+			}
+		}
+		if (lines.length == 0) {
+			msg.send("There are no stats available for '" + player + "'.");
+		} else {
+			msg.send(lines.join("\n"));
+		}
+	});
 };
