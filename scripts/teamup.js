@@ -241,10 +241,10 @@ module.exports = function(robot) {
 			var match = matches[m];
 			var ownScore = -1;
 			var otherScore = -1;
-			if (match.players[0].indexOf(user) > -1) {
+			if (match.players[0].indexOf(user) >= 0) {
 				ownScore = match.score[0];
 				otherScore = match.score[1];
-			} else if (match.players[1].indexOf(user) > -1) {
+			} else if (match.players[1].indexOf(user) >= 0) {
 				ownScore = match.score[1];
 				otherScore = match.score[0];
 			}
@@ -347,25 +347,92 @@ module.exports = function(robot) {
 		var player = msg.match[1];
 		var players = [];
 		if (player == "all") {
-			for (u = 0; u < users.length; u++) {
+			for (var u = 0; u < users.length; u++) {
 				players.push(users[u][0][0]);
 			}
 		} else {
 			players.push(player);
 		}
 		lines = [];
-		for (p = 0; p < players.length; p++) {
+		for (var p = 0; p < players.length; p++) {
 			pl = players[p];
 			name = getRandomNickname(pl);
 			if (name == pl) {
 				// these are non-Becker players, so we'll ignore them
 				continue;
 			}
-			stats = getStats(msg, pl, 99999);
-			played = stats[0] + stats[1] + stats[2];
+			var stats = getStats(msg, pl, 99999);
+			var played = stats[0] + stats[1] + stats[2];
 			if (played > 0) {
 				lines.push(getPlayerShortName(pl) + ": " + stats[0] + " wins " + stats[1] + " draws " + stats[2] + " losses");
 			}
+		}
+		var winningStreaks = {};
+		var losingStreaks = {};
+		var longestWinningStreak = 0;
+		var longestWinningStreakPlayers = [];
+		var longestLosingStreak = 0;
+		var longestLosingStreakPlayers = [];
+		for (var p = 0; p < players.length; p++) {
+			winningStreaks[players[p]] = 0;
+			losingStreaks[players[p]] = 0;
+		}
+		for (var m = 0; m < matches.length; m++) {
+			var match = matches[m];
+			if (match.score[0] == match.score[1]) {
+				for (var t = 0; t < 2; t++) {
+					for (var p = 0; p < match.players[t].length; p++) {
+						var pl = match.players[t][p];
+						if (players.indexOf(pl) >= 0) {
+							winningStreaks[pl] = 0;
+							losingStreaks[pl] = 0;
+						}
+					}
+				}
+			} else {
+				var winners = match.score[0] > match.score[1] ? match.players[0] : match.players[1];
+				var losers = match.score[0] < match.score[1] ? match.players[0] : match.players[1];
+				for (var w = 0; w < winners.length; w++) {
+					if (players.indexOf(winners[w]) >= 0) {
+						winningStreaks[winners[w]]++;
+						losingStreaks[winners[w]] = 0;
+					}
+				}
+				for (var l = 0; l < losers.length; l++) {
+					if (players.indexOf(losers[l]) >= 0) {
+						winningStreaks[losers[l]] = 0;
+						losingStreaks[losers[l]]++;
+					}
+				}
+			}
+			for (var ws in winningStreaks) {
+				var wn = getPlayerShortName(ws);
+				if (winningStreaks[ws] == longestWinningStreak) {
+					if (longestWinningStreakPlayers.indexOf(wn) < 0) {
+						longestWinningStreakPlayers.push(wn);
+					}
+				} else if (winningStreaks[ws] > longestWinningStreak) {
+					longestWinningStreak = winningStreaks[ws];
+					longestWinningStreakPlayers = [wn];
+				}
+			}
+			for (var ls in losingStreaks) {
+				var ln = getPlayerShortName(ls);
+				if (losingStreaks[ls] == longestLosingStreak) {
+					if (longestLosingStreakPlayers.indexOf(ln) < 0) {
+						longestLosingStreakPlayers.push(ln);
+					}
+				} else if (losingStreaks[ls] > longestLosingStreak) {
+					longestLosingStreak = losingStreaks[ls];
+					longestLosingStreakPlayers = [ln];
+				}
+			}
+		}
+		if (longestWinningStreak > 0 && longestWinningStreakPlayers.length > 0) {
+			lines.push("Longest winning streak: " + longestWinningStreak + " matches by: " + longestWinningStreakPlayers.join(", "));
+		}
+		if (longestLosingStreak > 0 && longestLosingStreakPlayers.length > 0) {
+			lines.push("Longest losing streak: " + longestLosingStreak + " matches by: " + longestLosingStreakPlayers.join(", "));
 		}
 		if (lines.length == 0) {
 			msg.send("There are no stats available for '" + player + "'.");
