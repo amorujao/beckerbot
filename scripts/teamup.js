@@ -8,8 +8,8 @@
 //  None
 //
 //Commands:
-//  hubot teamup <players> - Create two teams with comma separated players (equivalent to: futsal teamup=<players> team1=<none> team2=<none> type=ranking)
-//  hubot futsal teamup=<players> team1=<team 1 players> team2=<team 2 players> type=<random|ranking>- Create two teams with the given players and pre-populate each team with at least 1 player each
+//  hubot teamup <players> - Generate several team options using different team-up strategies so that players can vote for their favorite one
+//  hubot futsal teamup=<players> team1=<team 1 players> team2=<team 2 players> type=<random|alternating|alternating-pairs>- Create two teams with the given players and pre-populate each team with at least 1 player each
 //  hubot futsal rank - Get futsal rankings based on all past matches
 //  hubot futsal rank detailed - Get futsal rankings with number of wins / draws / losses for each player
 //  hubot futsal rank last <N> - Get futsal rankings based on the last N matches
@@ -173,30 +173,42 @@ module.exports = function(robot) {
 		});
 	}
 
-	function teamup(msg, players, team1, team2, type, numberOfMatches) {
+	// team generation types explained (numbers reflect each player's position in the ranking):
+	// - random: what you'd expect
+	// - alternating: 1357 vs 2468
+	// - alternating-pairs: 1458 vs 2367
+	function teamup(msg, players, team1, team2, type, numberOfMatches, header) {
 
 		//TODO: add type for: 2 top + 2 bottom for one team, 4 in the middle for the other team 
 		if (type === "random") {
 			// random sort
 			shuffle(players);
-		} else {
+		} else if (type === "ranking" || type === "alternating" || type === "alternating-pairs") {
 			// sort based on ranking
-			sortPlayers(msg, players, true, 9999);
+			sortPlayers(msg, players, true, numberOfMatches);
+		} else {
+			msg.send("Unsupported teamup type: " + type);
+			return;
 		}
 
-		// set up teams with the following distribution:
-		// 1. first player goes to team A
-		// 2. players #2 and #3 go to team B
-		// 3. players #4 and #5 go to team A
-		// 4. ... and so on, until all players are placed in teams
 		var teams = [team1, team2];
 		var team = team1.length == team2.length ? Math.floor(Math.random() * 2) :
 			team1.length > team2.length ? 1 : 0;
-		for (var player = 0; player < players.length; player++) {
-			teams[team].push(players[player]);
-			var otherTeam = (team + 1) % 2;
-			if (teams[team].length > teams[otherTeam].length) {
-				team = otherTeam;
+		if (type === "alternating") {
+			for (var player = 0; player < players.length; player++) {
+				teams[team].push(players[player]);
+				var otherTeam = (team + 1) % 2;
+				if (teams[team].length >= teams[otherTeam].length) {
+					team = otherTeam;
+				}
+			}
+		} else {// random (it doesn't matter which type we use, what matters is the random sort), ranking, alternating-pairs
+			for (var player = 0; player < players.length; player++) {
+				teams[team].push(players[player]);
+				var otherTeam = (team + 1) % 2;
+				if (teams[team].length > teams[otherTeam].length) {
+					team = otherTeam;
+				}
 			}
 		}
 
@@ -211,10 +223,16 @@ module.exports = function(robot) {
         var teamNames = teamPairs[Math.floor(Math.random() * teamPairs.length)];
 
         // display teams & players
-        if (teamNames.length == 3) {// only some of the team pairs have an image to go with it (on item [2])
-            msg.send(teamNames[2]);
-        }
-        msg.send(":soccer: *" + teamNames[0] + "*: " + teams[0].join(", ") + "\n:shirt: *" + teamNames[1] + "*: " + teams[1].join(", "));
+		var lines = [];
+		if ((typeof header === 'string' || header instanceof String) && header.length > 0) {
+			lines.push(header);
+		}
+		// team images disabled
+        //if (teamNames.length == 3) {// only some of the team pairs have an image to go with it (on item [2])
+		//	lines.push(teamNames[2]);
+        //}
+        lines.push(":soccer: *" + teamNames[0] + "*: " + teams[0].join(", ") + "\n:shirt: *" + teamNames[1] + "*: " + teams[1].join(", "));
+		msg.send(lines.join("\n"));
     };
 
 	function getMatchString(msg, match) {
@@ -261,14 +279,14 @@ module.exports = function(robot) {
 		return stats;
 	}
 
-	function ranking(msg, showDetails, numberOfMatches) {
+	function ranking(msg, showDetails, numberOfMatches, minMatchesPlayed) {
 
 		var players = [];
 		for (i = 0; i < users.length; i++) {
 			u = users[i][0][0];
 			s = getStats(msg, u, numberOfMatches);
-			if (s[0] + s[1] + s[2] >= 2) {
-				// only include players with at least 2 matches played
+			if (s[0] + s[1] + s[2] >= minMatchesPlayed) {
+				// only include players with at least minMatchesPlayed matches played
 				players.push(u);
 			}
 		}
@@ -293,7 +311,7 @@ module.exports = function(robot) {
 			lastScore = score;
 		}
 		if (ranking.length > 0) {
-			msg.send("Ranking based on " + (numberOfMatches > matches.length ? "all" : ("the last " + numberOfMatches)) + " matches (for players with at least 2 matches played):\n" + ranking.join("\n"));
+			msg.send("Ranking based on " + (numberOfMatches > matches.length ? "all" : ("the last " + numberOfMatches)) + " matches (for players with at least " + minMatchesPlayed + " matches played):\n" + ranking.join("\n"));
 		} else {
 			msg.send("There are currently no player statistics available.");
 		}
@@ -330,73 +348,73 @@ module.exports = function(robot) {
 
 			lines.push("");
 
-		var winningStreaks = {};
-		var losingStreaks = {};
-		var longestWinningStreak = 0;
-		var longestWinningStreakPlayers = [];
-		var longestLosingStreak = 0;
-		var longestLosingStreakPlayers = [];
-		for (var p = 0; p < players.length; p++) {
-			winningStreaks[players[p]] = 0;
-			losingStreaks[players[p]] = 0;
-		}
-		for (var m = 0; m < matches.length; m++) {
-			var match = matches[m];
-			if (match.score[0] == match.score[1]) {
-				for (var t = 0; t < 2; t++) {
-					for (var p = 0; p < match.players[t].length; p++) {
-						var pl = match.players[t][p];
-						if (players.indexOf(pl) >= 0) {
-							winningStreaks[pl] = 0;
-							losingStreaks[pl] = 0;
+			var winningStreaks = {};
+			var losingStreaks = {};
+			var longestWinningStreak = 0;
+			var longestWinningStreakPlayers = [];
+			var longestLosingStreak = 0;
+			var longestLosingStreakPlayers = [];
+			for (var p = 0; p < players.length; p++) {
+				winningStreaks[players[p]] = 0;
+				losingStreaks[players[p]] = 0;
+			}
+			for (var m = 0; m < matches.length; m++) {
+				var match = matches[m];
+				if (match.score[0] == match.score[1]) {
+					for (var t = 0; t < 2; t++) {
+						for (var p = 0; p < match.players[t].length; p++) {
+							var pl = match.players[t][p];
+							if (players.indexOf(pl) >= 0) {
+								winningStreaks[pl] = 0;
+								losingStreaks[pl] = 0;
+							}
+						}
+					}
+				} else {
+					var winners = match.score[0] > match.score[1] ? match.players[0] : match.players[1];
+					var losers = match.score[0] < match.score[1] ? match.players[0] : match.players[1];
+					for (var w = 0; w < winners.length; w++) {
+						if (players.indexOf(winners[w]) >= 0) {
+							winningStreaks[winners[w]]++;
+							losingStreaks[winners[w]] = 0;
+						}
+					}
+					for (var l = 0; l < losers.length; l++) {
+						if (players.indexOf(losers[l]) >= 0) {
+							winningStreaks[losers[l]] = 0;
+							losingStreaks[losers[l]]++;
 						}
 					}
 				}
-			} else {
-				var winners = match.score[0] > match.score[1] ? match.players[0] : match.players[1];
-				var losers = match.score[0] < match.score[1] ? match.players[0] : match.players[1];
-				for (var w = 0; w < winners.length; w++) {
-					if (players.indexOf(winners[w]) >= 0) {
-						winningStreaks[winners[w]]++;
-						losingStreaks[winners[w]] = 0;
+				for (var ws in winningStreaks) {
+					var wn = getPlayerShortName(ws);
+					if (winningStreaks[ws] == longestWinningStreak) {
+						if (longestWinningStreakPlayers.indexOf(wn) < 0) {
+							longestWinningStreakPlayers.push(wn);
+						}
+					} else if (winningStreaks[ws] > longestWinningStreak) {
+						longestWinningStreak = winningStreaks[ws];
+						longestWinningStreakPlayers = [wn];
 					}
 				}
-				for (var l = 0; l < losers.length; l++) {
-					if (players.indexOf(losers[l]) >= 0) {
-						winningStreaks[losers[l]] = 0;
-						losingStreaks[losers[l]]++;
+				for (var ls in losingStreaks) {
+					var ln = getPlayerShortName(ls);
+					if (losingStreaks[ls] == longestLosingStreak) {
+						if (longestLosingStreakPlayers.indexOf(ln) < 0) {
+							longestLosingStreakPlayers.push(ln);
+						}
+					} else if (losingStreaks[ls] > longestLosingStreak) {
+						longestLosingStreak = losingStreaks[ls];
+						longestLosingStreakPlayers = [ln];
 					}
 				}
 			}
-			for (var ws in winningStreaks) {
-				var wn = getPlayerShortName(ws);
-				if (winningStreaks[ws] == longestWinningStreak) {
-					if (longestWinningStreakPlayers.indexOf(wn) < 0) {
-						longestWinningStreakPlayers.push(wn);
-					}
-				} else if (winningStreaks[ws] > longestWinningStreak) {
-					longestWinningStreak = winningStreaks[ws];
-					longestWinningStreakPlayers = [wn];
-				}
+			if (longestWinningStreak > 0 && longestWinningStreakPlayers.length > 0) {
+				lines.push("Longest winning streak: " + longestWinningStreak + " matches by: " + longestWinningStreakPlayers.join(", "));
 			}
-			for (var ls in losingStreaks) {
-				var ln = getPlayerShortName(ls);
-				if (losingStreaks[ls] == longestLosingStreak) {
-					if (longestLosingStreakPlayers.indexOf(ln) < 0) {
-						longestLosingStreakPlayers.push(ln);
-					}
-				} else if (losingStreaks[ls] > longestLosingStreak) {
-					longestLosingStreak = losingStreaks[ls];
-					longestLosingStreakPlayers = [ln];
-				}
+			if (longestLosingStreak > 0 && longestLosingStreakPlayers.length > 0) {
+				lines.push("Longest losing streak: " + longestLosingStreak + " matches by: " + longestLosingStreakPlayers.join(", "));
 			}
-		}
-		if (longestWinningStreak > 0 && longestWinningStreakPlayers.length > 0) {
-			lines.push("Longest winning streak: " + longestWinningStreak + " matches by: " + longestWinningStreakPlayers.join(", "));
-		}
-		if (longestLosingStreak > 0 && longestLosingStreakPlayers.length > 0) {
-			lines.push("Longest losing streak: " + longestLosingStreak + " matches by: " + longestLosingStreakPlayers.join(", "));
-		}
 
 			msg.send(lines.join("\n"));
 		}
@@ -404,7 +422,10 @@ module.exports = function(robot) {
 
     robot.respond(/teamup (.+)/i, function(msg) {
       var players = msg.match[1].split(/\s?,\s?/);
-      teamup(msg, players, [], [], "ranking", 9999);
+      teamup(msg, players, [], [], "alternating-pairs", 9999, "*Option 1* (standard team-up strategy):");
+      teamup(msg, players, [], [], "alternating", 9999, "*Option 2* (slightly modified from the standard strategy):");
+      teamup(msg, players, [], [], "alternating", 10, "*Option 3* (based on recent results):");
+      //teamup(msg, players, [], [], "random", 9999, "Random:");
     });
 
     robot.respond(/futsal teamup players=(.+) team1=(.+) team2=(.+) type=(.+)?/i, function(msg) {
@@ -421,7 +442,7 @@ module.exports = function(robot) {
 		for (var m = 0; m < matches.length; m++) {
 			lines.push(getMatchString(msg, matches[m]));
 		}
-			msg.send(lines.join("\n"));
+		msg.send(lines.join("\n"));
 	});
 
 	robot.respond(/futsal last match/i, function(msg) {
@@ -429,11 +450,11 @@ module.exports = function(robot) {
 	});
 
 	robot.respond(/futsal rank( detailed)?$/i, function(msg) {
-		ranking(msg, msg.match.length >= 2 && msg.match[1] === " detailed", 9999);
+		ranking(msg, msg.match.length >= 2 && msg.match[1] === " detailed", 9999, 2);
 	});
 
 	robot.respond(/futsal rank all(( )?time)?/i, function(msg) {
-		ranking(msg, false, 9999);
+		ranking(msg, false, 9999, 2);
 	});
 
 	robot.respond(/futsal rank last (\d+)( detailed)?$/i, function(msg) {
@@ -441,7 +462,7 @@ module.exports = function(robot) {
 		if (matchCount <= 0) {
 			msg.send("Please enter a positive integer for the match count.");
 		} else {
-			ranking(msg, msg.match.length >= 3 && msg.match[2] === " detailed", matchCount);
+			ranking(msg, msg.match.length >= 3 && msg.match[2] === " detailed", matchCount, matchCount >= 2 ? 2 : 1);
 		}
 	});
 
