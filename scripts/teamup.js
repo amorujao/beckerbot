@@ -10,11 +10,11 @@
 //Commands:
 //  hubot teamup <players> - Create two teams with comma separated players (equivalent to: futsal teamup=<players> team1=<none> team2=<none> type=ranking)
 //  hubot futsal teamup=<players> team1=<team 1 players> team2=<team 2 players> type=<random|ranking>- Create two teams with the given players and pre-populate each team with at least 1 player each
-//  hubot futsal rank all - Get futsal rankings based on all past matches
-//  hubot futsal rank last <N> - Get futsal rankings based on the last N matches
+//  hubot futsal rank - Get futsal rankings based on all past matches
 //  hubot futsal rank detailed - Get futsal rankings with number of wins / draws / losses for each player
+//  hubot futsal rank last <N> - Get futsal rankings based on the last N matches
+//  hubot futsal stats - Get futsal statistics for all players
 //  hubot futsal stats <player> - Get futsal statistics for <player>
-//  hubot futsal stats all - Get futsal statistics for all players
 //  hubot futsal matches - Get the list of all past matches
 //  hubot futsal last match - Get the details for the last recorded match
 //
@@ -299,52 +299,8 @@ module.exports = function(robot) {
 		}
 	}
 
-    robot.respond(/teamup (.+)/i, function(msg) {
-      var players = msg.match[1].split(/\s?,\s?/);
-      teamup(msg, players, [], [], "ranking", 9999);
-    });
+	function showStats(msg, player) {
 
-    robot.respond(/futsal teamup players=(.+) team1=(.+) team2=(.+) type=(.+)?/i, function(msg) {
-      var players = msg.match[1].split(/\s?,\s?/);
-      var team1 = msg.match[2].split(/\s?,\s?/);
-      var team2 = msg.match[3].split(/\s?,\s?/);
-      var type = msg.match[4];
-      teamup(msg, players, team1, team2, type, 9999);
-    });
-
-	robot.respond(/futsal matches/i, function(msg) {
-
-		var lines = [];
-		for (var m = 0; m < matches.length; m++) {
-			lines.push(getMatchString(msg, matches[m]));
-		}
-		msg.send(lines.join("\n"));
-	});
-
-	robot.respond(/futsal last match/i, function(msg) {
-		msg.send(getMatchString(msg, matches[matches.length - 1]));
-	});
-
-	robot.respond(/futsal rank all(( )?time)?/i, function(msg) {
-		ranking(msg, false, 9999);
-	});
-
-	robot.respond(/futsal rank last (\d+)/i, function(msg) {
-		var matchCount = parseInt(msg.match[1]);
-		if (matchCount <= 0) {
-			msg.send("Please enter a positive integer for the match count.");
-		} else {
-			ranking(msg, false, matchCount);
-		}
-	});
-
-	robot.respond(/futsal rank detailed/i, function(msg) {
-		ranking(msg, true, 9999);
-	});
-
-	robot.respond(/futsal stats (.+)/i, function(msg) {
-
-		var player = msg.match[1];
 		var players = [];
 		if (player == "all") {
 			for (var u = 0; u < users.length; u++) {
@@ -367,6 +323,13 @@ module.exports = function(robot) {
 				lines.push(getPlayerShortName(pl) + ": " + stats[0] + " wins " + stats[1] + " draws " + stats[2] + " losses");
 			}
 		}
+
+		if (lines.length == 0) {
+			msg.send("There are no stats available for '" + player + "'.");
+		} else {
+
+			lines.push("");
+
 		var winningStreaks = {};
 		var losingStreaks = {};
 		var longestWinningStreak = 0;
@@ -434,10 +397,59 @@ module.exports = function(robot) {
 		if (longestLosingStreak > 0 && longestLosingStreakPlayers.length > 0) {
 			lines.push("Longest losing streak: " + longestLosingStreak + " matches by: " + longestLosingStreakPlayers.join(", "));
 		}
-		if (lines.length == 0) {
-			msg.send("There are no stats available for '" + player + "'.");
-		} else {
+
 			msg.send(lines.join("\n"));
 		}
+	}
+
+    robot.respond(/teamup (.+)/i, function(msg) {
+      var players = msg.match[1].split(/\s?,\s?/);
+      teamup(msg, players, [], [], "ranking", 9999);
+    });
+
+    robot.respond(/futsal teamup players=(.+) team1=(.+) team2=(.+) type=(.+)?/i, function(msg) {
+      var players = msg.match[1].split(/\s?,\s?/);
+      var team1 = msg.match[2].split(/\s?,\s?/);
+      var team2 = msg.match[3].split(/\s?,\s?/);
+      var type = msg.match[4];
+      teamup(msg, players, team1, team2, type, 9999);
+    });
+
+	robot.respond(/futsal matches/i, function(msg) {
+
+		var lines = [];
+		for (var m = 0; m < matches.length; m++) {
+			lines.push(getMatchString(msg, matches[m]));
+		}
+			msg.send(lines.join("\n"));
+	});
+
+	robot.respond(/futsal last match/i, function(msg) {
+		msg.send(getMatchString(msg, matches[matches.length - 1]));
+	});
+
+	robot.respond(/futsal rank( detailed)?$/i, function(msg) {
+		ranking(msg, msg.match.length >= 2 && msg.match[1] === " detailed", 9999);
+	});
+
+	robot.respond(/futsal rank all(( )?time)?/i, function(msg) {
+		ranking(msg, false, 9999);
+	});
+
+	robot.respond(/futsal rank last (\d+)( detailed)?$/i, function(msg) {
+		var matchCount = parseInt(msg.match[1]);
+		if (matchCount <= 0) {
+			msg.send("Please enter a positive integer for the match count.");
+		} else {
+			ranking(msg, msg.match.length >= 3 && msg.match[2] === " detailed", matchCount);
+		}
+	});
+
+	robot.respond(/futsal stats (.+)/i, function(msg) {
+		showStats(msg, msg.match[1]);
+	});
+
+	robot.respond(/futsal stats$/i, function(msg) {
+		showStats(msg, "all");
 	});
 };
