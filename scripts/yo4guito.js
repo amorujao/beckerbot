@@ -47,7 +47,7 @@ module.exports = function(robot) {
     return msg.message.user.room != "yo4guito" && msg.message.user.room != "hubot" && msg.message.user.room != 'andre-tests' && msg.message.user.room != 'Shell';
   }
 
-  robot.hear(/\b?yo\b?/i, function(msg) {
+  robot.hear(/\byo\b/i, function(msg) {
     if (filterChannel(msg)) {
       return;
     }
