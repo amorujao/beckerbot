@@ -51,11 +51,26 @@ module.exports = function(robot) {
   ];
   var timezoneOffset = 1;
 
-  function sendMessage(msg, options, odds) {
+  function sendMessage(msg, options, odds, cooldown, cooldownKey) {
     if (typeof odds === 'undefined') {
       odds = 1;
     }
+    if (typeof cooldown === 'undefined') {
+      cooldown = 0;
+    }
+    if (typeof cooldownKey === 'undefined') {
+      cooldownKey = '';
+    }
     if (Math.random() <= odds) {
+      if (cooldown > 0 && cooldownKey != '') {
+        cooldownKey = "last_cooldown_sent_" + cooldownKey;
+        var lastMsgTime = msg.robot.brain.get(cooldownKey);
+        var now = new Date().getTime();
+        if (lastMsgTime != undefined && now <= (lastMsgTime + cooldown)) {
+          return;
+        }
+        msg.robot.brain.set(cooldownKey, now);
+      }
       var user = msg.message.user.name;
       if (msg.message.user.real_name != undefined) {
         var names = msg.message.user.real_name.split(" ");
@@ -75,7 +90,7 @@ module.exports = function(robot) {
       return;
     }
 
-    sendMessage(msg, ["http://media.giphy.com/media/JDKxRN0Bvmm2c/giphy.gif", "http://www.reactiongifs.us/wp-content/uploads/2013/06/ill_be_back_terminator.gif"]);
+    sendMessage(msg, ["http://media.giphy.com/media/JDKxRN0Bvmm2c/giphy.gif", "http://www.reactiongifs.us/wp-content/uploads/2013/06/ill_be_back_terminator.gif"], 0.1);
   });
 
   robot.hear(/^((?!i.?ll).)*be back in/i, function(msg) {
@@ -101,7 +116,7 @@ module.exports = function(robot) {
     }
 
     if (text.search(/doente|sick|medico|médico|doctor/i) >= 0) {
-      sendMessage(msg, jd, 0.3333);
+      sendMessage(msg, jd, 0.2);
       return;
     } else if (text.search(/\ball in\b/i) >= 0) {
       sendMessage(msg, ["http://www.pokerdictionary.net/wp-content/uploads/2013/01/poker_face.png"]);
@@ -120,25 +135,34 @@ module.exports = function(robot) {
     var hours = now.getHours() + timezoneOffset;
     var explanation = text.trim().length > 3;
 
+    /*if (weekDay == 2 && (hours >= 13 && hours < 15) &&
+        (text.search(/\bhome\b/i) >= 0 || text.search(/\bcasa\b/i) >= 0 || text.search(/\bin\b/i) >= 0)) {
+      var user = msg.message.user.name;
+      if (msg.message.user.real_name != undefined && msg.message.user.real_name.split(" ")[0] == "Jorge") {
+        sendMessage(msg, ["https://bemmaiorboutique.com/product_images/c/981/FF16_Emprega_2__25393_zoom.jpg", "http://i381.photobucket.com/albums/oo257/webuser/sexy-maid.gif", "https://s-media-cache-ak0.pinimg.com/736x/03/08/37/030837a55e5ae28f23061fe50a21a683.jpg"], 0.6666, 60*60*12, "cleaning_lady");
+        return;
+      }
+    }*/
+
     switch(hours) {
       case 7:
       case 8:
       case 9:
         if (_in) {
-          sendMessage(msg, in_normal, 0.2);
+          sendMessage(msg, in_normal, 0.05);
         }
         break;
       case 10:
       case 11:
         if (_in && !explanation) {
-          sendMessage(msg, in_late, 1);
+          sendMessage(msg, in_late, 0.1);
         }
         break;
       case 12:
       case 13:
       case 14:
         if (_out && text.search(/lunch|almoc|almoç/i) >= 0) {
-          sendMessage(msg, out_lunch, 0.5);
+          sendMessage(msg, out_lunch, 0.1);
         }
         break;
       case 15:
@@ -146,17 +170,17 @@ module.exports = function(robot) {
       case 17:
         if (_out) {
           if (explanation) {
-            sendMessage(msg, out_normal, 0.25);
+            sendMessage(msg, out_normal, 0.05);
           } else {
-          sendMessage(msg, out_early, 1);
-        }
+            sendMessage(msg, out_early, 0.1);
+          }
         }
         break;
       case 18:
       case 19:
       case 20:
         if (_out) {
-          sendMessage(msg, out_normal, 0.25);
+          sendMessage(msg, out_normal, 0.1);
         }
         break;
       default:

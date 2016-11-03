@@ -40,6 +40,11 @@ module.exports = function(robot) {
     'Na ponta da piroca!'
   ];
 
+  // milksada
+  var rp = [
+    'As 50 frames de Grey'
+  ];
+
   // phrases used by more than one person
   var misc = [
     'Há aqui um galhenz',
@@ -90,7 +95,7 @@ module.exports = function(robot) {
   }
 
   robot.respond(/\bquote|hit( me)?\b/i, function(msg) {
-    var all = misc.concat(jb, rg, cs);
+    var all = misc.concat(jb, rg, cs, rp, misc);
     sendMessage(msg, all);
   });
 
@@ -110,11 +115,15 @@ module.exports = function(robot) {
     sendMessage(msg, cs);
   });
 
+  robot.hear(/milksada/i, function(msg) {
+    sendMessage(msg, rp);
+  });
+
   robot.hear(/\bpeço desculpa\b/i, function(msg) {
     sendMessage(msg, ["não, eu é que peço desculpa"]);
   });
 
-  robot.hear(/\bobrigado|agrade(c|ç)o\b/i, function(msg) {
+  robot.hear(/\bobrigad(o|a)|agrade(c|ç)o\b/i, function(msg) {
     sendMessage(msg, ["não, eu é que agradeço"]);
   });
 
