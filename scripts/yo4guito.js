@@ -62,7 +62,12 @@ module.exports = function(robot) {
       "https://media.giphy.com/media/xT8qBfxbxaS8DRPnUY/giphy.gif",
       "https://media.giphy.com/media/YEcGkzJuIqBqM/giphy.gif",
       "https://media.giphy.com/media/3oz8xZGfHArTvh99YI/giphy.gif",
-      "https://media.giphy.com/media/13yNFN1TlNCjC0/giphy.gif"
+      "https://media.giphy.com/media/13yNFN1TlNCjC0/giphy.gif",
+      "https://media.giphy.com/media/26BRCq4yj6fLhWlDq/giphy.gif",
+      "https://media.giphy.com/media/3oEduYmGZNkQ9S4McU/giphy.gif",
+      "https://media.giphy.com/media/2u11zpzwyMTy8/giphy.gif",
+      "https://media.giphy.com/media/URuEc5hnbNIGs/giphy.gif",
+      "https://media.giphy.com/media/5fBH6z8aMV1RbA4FaSc/giphy.gif"
       ], 1);
   });
 
