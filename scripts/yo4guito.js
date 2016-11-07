@@ -12,6 +12,7 @@
 
 module.exports = function(robot) {
   //user placeholder: "#user#"
+  var userPlaceholder = "#user#";
 
   function sendMessage(msg, options, odds, cooldown, cooldownKey) {
     if (typeof odds === 'undefined') {
@@ -38,7 +39,7 @@ module.exports = function(robot) {
         var names = msg.message.user.real_name.split(" ");
         user = names[0];
       }
-      message = msg.random(options).replace("#user#", user);
+      message = msg.random(options).replace(userPlaceholder, user);
       msg.send(message);
     }
   }
@@ -71,4 +72,25 @@ module.exports = function(robot) {
       ], 1);
   });
 
+  robot.hear(/\bnoyo\b/i, function(msg) {
+    if (filterChannel(msg)) {
+      return;
+    }
+
+    sendMessage(msg, [
+      "Massa e atum para os próximos dias, " + userPlaceholder,
+      "Toca a cortar nos bens desnecessários; as velas servem muito bem para iluminar em casa, " + userPlaceholder,
+      "Precisas de trocos para o café, " + userPlaceholder + "?",
+      "Não te preocupes " + userPlaceholder + ". Ainda vem no barco a meio do Atlântico.", 
+      "Hoje é um bom dia para começares essa dieta, " + userPlaceholder,
+      "Malta, vamos fazer uma vaquinha para o " + userPlaceholder,
+      "Está tudo a :fire:!",
+      "Deve estar para breve, porque eu já recebi. ;)",
+      "Amanhã é certinho! Vai uma aposta, " + userPlaceholder + "? Ah, pois...",
+      "https://files.slack.com/files-pri/T02V76HST-F1ZKN36LW/boleia.jpg",
+      "https://www.youtube.com/watch?v=_IrQHeDcMi8",
+      "Precisas de boleia para amanhã, " + userPlaceholder + "?"
+      ], 0.8);
+  });
+  
 };
