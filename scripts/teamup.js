@@ -431,12 +431,13 @@ module.exports = function(robot) {
       //teamup(msg, players, [], [], "random", 9999, "Random:");
     });
 
-    robot.respond(/futsal teamup players=(.+) team1=(.+) team2=(.+) type=(.+)?/i, function(msg) {
+    robot.respond(/futsal teamup players=(.+) team1=(.+) team2=(.+) type=(.+) ranking-history=(\d+)/i, function(msg) {
       var players = msg.match[1].split(/\s?,\s?/);
-      var team1 = msg.match[2].split(/\s?,\s?/);
-      var team2 = msg.match[3].split(/\s?,\s?/);
+      var team1 = msg.match[2].split(/\s?,\s?/); if (team1.length == 1 && team1[0] == '-') team1 = [];
+      var team2 = msg.match[3].split(/\s?,\s?/); if (team2.length == 1 && team2[0] == '-') team2 = [];
       var type = msg.match[4];
-      teamup(msg, players, team1, team2, type, 9999);
+      var history = msg.match[5];
+      teamup(msg, players, team1, team2, type, history);
     });
 
 	robot.respond(/futsal matches/i, function(msg) {
