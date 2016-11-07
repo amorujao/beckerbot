@@ -71,7 +71,8 @@ module.exports = function(robot) {
       "Massa e atum para os próximos dias, " + userPlaceholder,
       "Toca a cortar nos bens desnecessários; as velas servem muito bem para iluminar em casa, " + userPlaceholder,
       "Precisas de trocos para o café, " + userPlaceholder + "?",
-      "Não te preocupes " + userPlaceholder + ". Ainda vem no barco a meio do Atlântico."
+      "Não te preocupes " + userPlaceholder + ". Ainda vem no barco a meio do Atlântico.", 
+      "Hoje é um bom dia para começares essa dieta, " + userPlaceholder
       ], 0.7);
   });
   
