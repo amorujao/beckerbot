@@ -9,7 +9,7 @@
 //
 //Commands:
 //  hubot teamup <players> - Generate several team options using different team-up strategies so that players can vote for their favorite one
-//  hubot futsal teamup=<players> team1=<team 1 players> team2=<team 2 players> type=<random|alternating|alternating-pairs>- Create two teams with the given players and pre-populate each team with at least 1 player each
+//  hubot futsal teamup players=<players> team1=<team 1 players> team2=<team 2 players> type=<random|alternating|alternating-pairs> ranking-history=<number of matches> - Create two teams with the given players (or just set '-' instead of the player list to skip this) and pre-populate each team with at least 1 player each; ranking-history is the number of matches (from the most recent) to take into account; to use the full ranking, just use a big number like 999
 //  hubot futsal rank - Get futsal rankings based on all past matches
 //  hubot futsal rank detailed - Get futsal rankings with number of wins / draws / losses for each player
 //  hubot futsal rank last <N> - Get futsal rankings based on the last N matches
