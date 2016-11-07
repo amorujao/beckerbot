@@ -72,8 +72,15 @@ module.exports = function(robot) {
       "Toca a cortar nos bens desnecessários; as velas servem muito bem para iluminar em casa, " + userPlaceholder,
       "Precisas de trocos para o café, " + userPlaceholder + "?",
       "Não te preocupes " + userPlaceholder + ". Ainda vem no barco a meio do Atlântico.", 
-      "Hoje é um bom dia para começares essa dieta, " + userPlaceholder
-      ], 0.7);
+      "Hoje é um bom dia para começares essa dieta, " + userPlaceholder,
+      "Malta, vamos fazer uma vaquinha para o " + userPlaceholder,
+      "Está tudo a :fire:!",
+      "Deve estar para breve, porque eu já recebi. ;)",
+      "Amanhã é certinho! Vai uma aposta, " + userPlaceholder + "? Ah, pois...",
+      "https://files.slack.com/files-pri/T02V76HST-F1ZKN36LW/boleia.jpg",
+      "https://www.youtube.com/watch?v=_IrQHeDcMi8",
+      "Precisas de boleia para amanhã, " + userPlaceholder + "?"
+      ], 0.8);
   });
   
 };
