@@ -9,7 +9,7 @@
 //
 //Commands:
 //  hubot teamup <players> - Generate several team options using different team-up strategies so that players can vote for their favorite one
-//  hubot futsal teamup=<players> team1=<team 1 players> team2=<team 2 players> type=<random|alternating|alternating-pairs>- Create two teams with the given players and pre-populate each team with at least 1 player each
+//  hubot futsal teamup players=<players> team1=<team 1 players> team2=<team 2 players> type=<random|alternating|alternating-pairs> ranking-history=<number of matches> - Create two teams with the given players (or just set '-' instead of the player list to skip this) and pre-populate each team with at least 1 player each; ranking-history is the number of matches (from the most recent) to take into account; to use the full ranking, just use a big number like 999
 //  hubot futsal rank - Get futsal rankings based on all past matches
 //  hubot futsal rank detailed - Get futsal rankings with number of wins / draws / losses for each player
 //  hubot futsal rank last <N> - Get futsal rankings based on the last N matches
@@ -46,7 +46,8 @@ module.exports = function(robot) {
 		{date:"2016-10-10", players:[["am", "jd", "pv", "Tiago Ferreira"],["jr", "ns", "rp", "jc"]], score:[6, 6]},
 		{date:"2016-10-17", players:[["am", "jd", "rf", "rp", "sa"],["jr", "ns", "jm", "jc", "pv"]], score:[11, 4]},
 		{date:"2016-10-24", players:[["am", "jr", "rf", "jm", "ns"],["rp", "rg", "sa", "jc", "pv"]], score:[8, 10]},
-		{date:"2016-10-31", players:[["am", "pv", "jc", "ns"],["rp", "rf", "sa", "Alcobaça"]], score:[8, 7]}
+		{date:"2016-10-31", players:[["am", "pv", "jc", "ns"],["rp", "rf", "sa", "Alcobaça"]], score:[8, 7]},
+		{date:"2016-11-07", players:[["pv", "jr", "ns", "jm"],["rp", "rf", "sa", "jc"]], score:[6, 8]}
 	];
 
 	// each item: [<aliases>, <nicknames>, <short name>]
@@ -431,12 +432,13 @@ module.exports = function(robot) {
       //teamup(msg, players, [], [], "random", 9999, "Random:");
     });
 
-    robot.respond(/futsal teamup players=(.+) team1=(.+) team2=(.+) type=(.+)?/i, function(msg) {
+    robot.respond(/futsal teamup players=(.+) team1=(.+) team2=(.+) type=(.+) ranking-history=(\d+)/i, function(msg) {
       var players = msg.match[1].split(/\s?,\s?/);
-      var team1 = msg.match[2].split(/\s?,\s?/);
-      var team2 = msg.match[3].split(/\s?,\s?/);
+      var team1 = msg.match[2].split(/\s?,\s?/); if (team1.length == 1 && team1[0] == '-') team1 = [];
+      var team2 = msg.match[3].split(/\s?,\s?/); if (team2.length == 1 && team2[0] == '-') team2 = [];
       var type = msg.match[4];
-      teamup(msg, players, team1, team2, type, 9999);
+      var history = msg.match[5];
+      teamup(msg, players, team1, team2, type, history);
     });
 
 	robot.respond(/futsal matches/i, function(msg) {
