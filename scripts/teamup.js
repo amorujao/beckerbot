@@ -259,7 +259,7 @@ module.exports = function(robot) {
 
 	function getStats(msg, user, match_count) {
 
-		var stats = [0, 0, 0];// wins, draws, losses
+		var stats = [0, 0, 0, []];// wins, draws, losses, form
 		for (var m = ((match_count <= 0 || match_count > matches.length) ? 0 : (matches.length - match_count)); m < matches.length; m++) {
 			var match = matches[m];
 			var ownScore = -1;
@@ -274,13 +274,19 @@ module.exports = function(robot) {
 			if (ownScore >= 0 && otherScore >= 0) {
 				if (ownScore > otherScore) {
 					stats[0]++;
+					stats[3].push("W");
 				} else if (ownScore < otherScore) {
 					stats[2]++;
+					stats[3].push("L");
 				} else {
 					stats[1]++;
+					stats[3].push("D");
 				}
 			}
 		}
+
+		//show only last 10 games
+		stats[3] = stats[3].slice(0,10);
 		return stats;
 	}
 
@@ -344,6 +350,7 @@ module.exports = function(robot) {
 			var played = stats[0] + stats[1] + stats[2];
 			if (played > 0) {
 				lines.push(getPlayerShortName(pl) + ": " + stats[0] + " wins " + stats[1] + " draws " + stats[2] + " losses");
+				lines.push("  "+ stats[3]);
 			}
 		}
 
