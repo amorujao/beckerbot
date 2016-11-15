@@ -349,7 +349,7 @@ module.exports = function(robot) {
 			var stats = getStats(msg, pl, 99999);
 			var played = stats[0] + stats[1] + stats[2];
 			if (played > 0) {
-				lines.push(getPlayerShortName(pl) + ": " + stats[0] + " wins " + stats[1] + " draws " + stats[2]);
+				lines.push(getPlayerShortName(pl) + ": " + stats[0] + " wins " + stats[1] + " draws " + stats[2] + " losses");
 				lines.push("  "+ stats[3]);
 			}
 		}
