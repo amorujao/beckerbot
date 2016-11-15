@@ -286,6 +286,7 @@ module.exports = function(robot) {
 		}
 
 		//show only last 10 games
+    stats[3].reverse();
 		stats[3] = stats[3].slice(0,10);
 		return stats;
 	}
@@ -349,8 +350,9 @@ module.exports = function(robot) {
 			var stats = getStats(msg, pl, 99999);
 			var played = stats[0] + stats[1] + stats[2];
 			if (played > 0) {
-				lines.push(getPlayerShortName(pl) + ": " + stats[0] + " wins " + stats[1] + " draws " + stats[2] + " losses");
-				lines.push("  "+ stats[3]);
+        var txt = getPlayerShortName(pl) + ": " + stats[0] + " wins " + stats[1] + " draws " + stats[2] + " losses";
+        txt += "  Form (last 10): today <- " + stats[3].join(' ');
+				lines.push(txt);
 			}
 		}
 
