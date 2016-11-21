@@ -46,7 +46,6 @@ module.exports = function(robot) {
   ];
   var poker = ['call', 'fold'];
   var jd = [
-    'http://www.jackdaniels.com/sites/default/files/MD1_small.png',
     'Um Jack Daniels resolve isso'
   ];
   var timezoneOffset = 1;
