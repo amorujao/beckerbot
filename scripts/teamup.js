@@ -436,9 +436,9 @@ module.exports = function(robot) {
 
     robot.respond(/teamup (.+)/i, function(msg) {
       var players = msg.match[1].split(/\s?,\s?/);
-      teamup(msg, players, [], [], "alternating-pairs", 9999, "*Option 1* (standard team-up strategy):");
-      teamup(msg, players, [], [], "alternating", 9999, "*Option 2* (slightly modified from the standard strategy):");
-      teamup(msg, players, [], [], "alternating", 10, "*Option 3* (based on recent results):");
+      teamup(msg, players, [], [], "alternating-pairs", 9999, "*Option 1*:");
+      teamup(msg, players, [], [], "alternating-pairs", 10, "*Option 2*:");
+      teamup(msg, players, [], [], "alternating", 10, "*Option 3*:");
       //teamup(msg, players, [], [], "random", 9999, "Random:");
     });
 
