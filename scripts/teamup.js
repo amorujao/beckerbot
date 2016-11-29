@@ -50,6 +50,7 @@ module.exports = function(robot) {
 		{date:"2016-11-07", players:[["pv", "jr", "ns", "jm"],["rp", "rf", "sa", "jc"]], score:[6, 8]},
 		{date:"2016-11-14", players:[["rf", "jr", "rp", "Alcobaça"],["am", "ns", "sa", "jc"]], score:[12, 8]},
 		{date:"2016-11-21", players:[["rf", "jd", "rp", "jm", "Alcobaça"],["am", "ns", "sa", "jc", "pv"]], score:[11, 13]},
+		{date:"2016-11-28", players:[["rp", "jd", "jr", "Estrilho", "sa"],["am", "ns", "pv", "Alcobaça", "Tiago Ferreira"]], score:[7, 5]},
 	];
 
 	// each item: [<aliases>, <nicknames>, <short name>]
