@@ -43,14 +43,14 @@ module.exports = function(robot) {
 		{date:"2016-09-19", players:[["am", "rf", "rg", "jm"],["ns", "jc", "pv", "sa"]], score:[13, 11]},
 		{date:"2016-09-26", players:[["am", "rf", "jm", "rp", "pv"],["ns", "jc", "sa", "jd", "Alcobaça"]], score:[15, 7]},
 		{date:"2016-10-03", players:[["am", "rp", "pv", "jc", "sa"],["rf", "ns", "jr", "jd"]], score:[13, 6]},
-		{date:"2016-10-10", players:[["am", "jd", "pv", "Tiago Ferreira"],["jr", "ns", "rp", "jc"]], score:[6, 6]},
+		{date:"2016-10-10", players:[["am", "jd", "pv", "Tiago"],["jr", "ns", "rp", "jc"]], score:[6, 6]},
 		{date:"2016-10-17", players:[["am", "jd", "rf", "rp", "sa"],["jr", "ns", "jm", "jc", "pv"]], score:[11, 4]},
 		{date:"2016-10-24", players:[["am", "jr", "rf", "jm", "ns"],["rp", "rg", "sa", "jc", "pv"]], score:[8, 10]},
 		{date:"2016-10-31", players:[["am", "pv", "jc", "ns"],["rp", "rf", "sa", "Alcobaça"]], score:[8, 7]},
 		{date:"2016-11-07", players:[["pv", "jr", "ns", "jm"],["rp", "rf", "sa", "jc"]], score:[6, 8]},
 		{date:"2016-11-14", players:[["rf", "jr", "rp", "Alcobaça"],["am", "ns", "sa", "jc"]], score:[12, 8]},
 		{date:"2016-11-21", players:[["rf", "jd", "rp", "jm", "Alcobaça"],["am", "ns", "sa", "jc", "pv"]], score:[11, 13]},
-		{date:"2016-11-28", players:[["rp", "jd", "jr", "Estrilho", "sa"],["am", "ns", "pv", "Alcobaça", "Tiago Ferreira"]], score:[7, 5]},
+		{date:"2016-11-28", players:[["rp", "jd", "jr", "Estrilho", "sa"],["am", "ns", "pv", "Alcobaça", "Tiago"]], score:[7, 5]},
 	];
 
 	// each item: [<aliases>, <nicknames>, <short name>]
@@ -58,6 +58,7 @@ module.exports = function(robot) {
 	// <nicknames>: array of nicknames to use for player (one will be picked at random)
 	// <single name>: shortest version of the player's name that uniquely identifies him/her'
 	var users = [
+    // (Ex-/)Becker players
 	[["am", "andre", "andré"], ["André Morujão"], "André"],
 	[["cb", "barbosa"], ["Captain Barbossa"], "Barbosa"],
 	[["cs", "silva"], ["Carlos Fucking Silva"], "Silva"],
@@ -78,7 +79,14 @@ module.exports = function(robot) {
 	[["rt", "rui torres"], ["Rui Torres"], "Torres"],
 	[["rp", "rui pereira", "milks"], ["Milks"], "Milks"],
 	[["sa", "sergio azevedo", "sérgio azevedo", "azevedo"], ["Sérgio Azevedo"], "Sérgio"],
-    ];
+    // External players
+	[["alcobaça", "fernando", "fernando pereira"], ["Alcobaça"], "Alcobaça"],
+	[["estrilho", "pedro mendes"], ["Pedro Mendes"], "Pedro Mendes"],
+	[["andre lessa", "andré lessa", "fontela"], ["Fontela"], "Fontela"],
+	[["tiago", "tiago costa", "tiago ferreira"], ["Tiago"], "Tiago"],
+	[["rui sousa"], ["Rui Sousa"], "Rui Sousa"],
+	[["rui brito"], ["Rui Brito"], "Rui Brito"],
+  ];
 
 	var teamPairs = [
 
