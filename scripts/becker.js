@@ -45,6 +45,11 @@ module.exports = function(robot) {
     'As 50 frames de Grey'
   ];
 
+  // diasada
+  var pd = [
+    'Vai levar no query!'
+  ];
+
   // phrases used by more than one person
   var misc = [
     'Há aqui um galhenz',
@@ -95,7 +100,7 @@ module.exports = function(robot) {
   }
 
   robot.respond(/\bquote|hit( me)?\b/i, function(msg) {
-    var all = misc.concat(jb, rg, cs, rp, misc);
+    var all = misc.concat(jb, rg, cs, rp, pd, misc);
     sendMessage(msg, all);
   });
 
@@ -117,6 +122,10 @@ module.exports = function(robot) {
 
   robot.hear(/milksada/i, function(msg) {
     sendMessage(msg, rp);
+  });
+
+  robot.hear(/diasada/i, function(msg) {
+    sendMessage(msg, pd);
   });
 
   robot.hear(/\bpeço desculpa\b/i, function(msg) {
