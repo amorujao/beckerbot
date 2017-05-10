@@ -104,11 +104,11 @@ module.exports = function(robot) {
     sendMessage(msg, all);
   });
 
-  robot.hear(/jbaptistada/i, function(msg) {
+  robot.hear(/j?baptistada/i, function(msg) {
     sendMessage(msg, jb);
   });
   
-  robot.hear(/jbatistada/i, function(msg) {
+  robot.hear(/j?batistada/i, function(msg) {
     sendMessage(msg, ["#user# aprende a escrever"]);
   });
 
