@@ -89,14 +89,14 @@ module.exports = function(robot) {
       return;
     }
 
-    sendMessage(msg, ["http://media.giphy.com/media/JDKxRN0Bvmm2c/giphy.gif", "http://www.reactiongifs.us/wp-content/uploads/2013/06/ill_be_back_terminator.gif"], 0.1);
+    sendMessage(msg, ["http://media.giphy.com/media/JDKxRN0Bvmm2c/giphy.gif", "http://www.reactiongifs.us/wp-content/uploads/2013/06/ill_be_back_terminator.gif"], 0.01);
   });
 
   robot.hear(/^((?!i.?ll).)*be back in/i, function(msg) {
     if (filterChannel(msg)) {
       return;
     }
-    sendMessage(msg, ["http://www.quickmeme.com/img/04/0429078be3870a05c54ecae0b10ddd5afb749b3e5f5ee9f4382af36601766960.jpg"], 0.2);
+    sendMessage(msg, ["http://www.quickmeme.com/img/04/0429078be3870a05c54ecae0b10ddd5afb749b3e5f5ee9f4382af36601766960.jpg"], 0.01);
   });
 
 /*  robot.hear(/\b(in|out)\b/i, function(msg) {
