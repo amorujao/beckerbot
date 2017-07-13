@@ -22,6 +22,6 @@
     "hubot-currency": "latest"
   },
   "engines": {
-    "node": "0.10.x"
+    "node": "6.11"
   }
 }
