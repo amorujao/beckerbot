@@ -57,6 +57,7 @@ module.exports = function(robot) {
 		{date:"2017-03-06", players:[["rp", "jr", "jc", "rf"],["sa", "am", "pv", "ns"]], score:[12, 14]},
 		{date:"2017-03-20", players:[["rp", "am", "alcobaça", "tiago"],["rf", "pv", "jc", "rg"]], score:[14, 8]},
 		{date:"2017-06-05", players:[["fontela", "am", "alcobaça", "jm"],["rp", "pv", "jc", "estrilho"]], score:[6, 17]},
+		{date:"2017-11-20", players:[["am", "rp", "jc", "ca", "ns"],["as", "pv", "rf", "rl", "sa"]], score:[9, 8]},
 	];
 
 	// each item: [<aliases>, <nicknames>, <short name>]
@@ -66,7 +67,9 @@ module.exports = function(robot) {
 	var users = [
     // (Ex-/)Becker players
 	[["am", "andre", "andré"], ["André Morujão"], "André"],
+ 	[["as", "alexandre silva"], ["Alexandre Silva"], "Alexandre"],
 	[["cb", "barbosa"], ["Captain Barbossa"], "Barbosa"],
+	[["ca", "cristiano", "cristiano aguiar"], ["Cristiano Aguiar"], "Cristiano"],
 	[["cs", "silva"], ["Carlos Fucking Silva"], "Silva"],
 	[["gs", "guilherme", "saraiva", "guilherme saraiva"], ["Guilherme Saraiva"], "Guilherme"],
 	[["ja", "joana araujo"], ["Joana Araujo"], "Joana Araújo"],
@@ -82,6 +85,7 @@ module.exports = function(robot) {
 	[["pv", "pedro", "vieira", "pedro vieira"], ["Pedro Vieira"], "Pedro"],
 	[["rg", "ricardo", "gomes", "ricardo gomes"], ["Ricardo Cheetah Gomes"], "Ricardo"],
 	[["rf", "rui ferreira", "ferreira"], ["Rui Ferreira"], "Rui"],
+	[["rl", "rui lopes"], ["Rui Lopes"], "Rui Lopes"],
 	[["rt", "rui torres"], ["Rui Torres"], "Torres"],
 	[["rp", "rui pereira", "milks"], ["Milks"], "Milks"],
 	[["sa", "sergio azevedo", "sérgio azevedo", "azevedo"], ["Sérgio Azevedo"], "Sérgio"],
