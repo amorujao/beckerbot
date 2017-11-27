@@ -67,7 +67,7 @@ module.exports = function(robot) {
 	var users = [
     // (Ex-/)Becker players
 	[["am", "andre", "andré"], ["André Morujão"], "André"],
- 	[["as", "alexandre silva"], ["Alexandre Silva"], "Alexandre"],
+ 	[["as", "alexandre", "alex", "alexandre silva"], ["Alexandre Silva"], "Alexandre"],
 	[["cb", "barbosa"], ["Captain Barbossa"], "Barbosa"],
 	[["ca", "cristiano", "cristiano aguiar"], ["Cristiano Aguiar"], "Cristiano"],
 	[["cs", "silva"], ["Carlos Fucking Silva"], "Silva"],
