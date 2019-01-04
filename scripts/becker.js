@@ -24,7 +24,9 @@ module.exports = function(robot) {
     '#user#, já não me amas :(',
     'Tu não me fales assim, #user#!',
     'Something you gotta understand #user#: I don\'t care about you, and I sure don\'t care about your family.',
-    '#user# I have two words for you, and the second one is "you"'
+    '#user# I have two words for you, and the second one is "you"',
+    '#user#, tu és mal formado',
+    'seu porco'
   ];
 
   // csilvada
