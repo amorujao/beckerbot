@@ -46,6 +46,11 @@ module.exports = function(robot) {
   var rp = [
     'As 50 frames de Grey'
   ];
+  
+  // jribeirada
+  var jr = [
+    ' It\'s kinda like... HEY! '
+  ];
 
   // diasada
   var pd = [
@@ -126,6 +131,10 @@ module.exports = function(robot) {
     sendMessage(msg, rp);
   });
 
+  robot.hear(/jribeirada/i, function(msg) {
+    sendMessage(msg, jr);
+  });
+  
   robot.hear(/diasada/i, function(msg) {
     sendMessage(msg, pd);
   });
