@@ -201,7 +201,7 @@ module.exports = function(robot) {
     sendMessage(msg, ["Buy now!"]);
   });
 
-  robot.hear(/\b((err|problem|issue).*PRS)|(PRS.*(err|problem|issue))/i, function(msg) {
+  robot.hear(/\b((err|problem|issue|bug).*PRS)|(PRS.*(err|problem|issue|bug))/i, function(msg) {
     sendMessage(msg, ["Q U E   B A R R A C A!!!!"]);
   });
 };
