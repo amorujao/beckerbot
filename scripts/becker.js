@@ -200,4 +200,8 @@ module.exports = function(robot) {
   robot.hear(/\bbuy now\?/i, function(msg) {
     sendMessage(msg, ["Buy now!"]);
   });
+
+  robot.hear(/\b((err|problem|issue).*PRS)|(PRS.*(err|problem|issue))/i, function(msg) {
+    sendMessage(msg, ["Q U E   B A R R A C A!!!!"]);
+  });
 };
