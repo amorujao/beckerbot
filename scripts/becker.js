@@ -57,6 +57,12 @@ module.exports = function(robot) {
     'Vai levar no query!'
   ];
 
+  // barbosada
+  var cb = [
+    'Isso é rápido',
+    'Ninguém morre, é só QA.'
+  ];
+
   // phrases used by more than one person
   var misc = [
     'Há aqui um galhenz',
@@ -137,6 +143,10 @@ module.exports = function(robot) {
   
   robot.hear(/diasada/i, function(msg) {
     sendMessage(msg, pd);
+  });
+
+  robot.hear(/barbosada/i, function(msg) {
+    sendMessage(msg, cb);
   });
 
   robot.hear(/\bpeço desculpa\b/i, function(msg) {
