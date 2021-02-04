@@ -62,6 +62,11 @@ module.exports = function(robot) {
     'Isso é rápido',
     'Ninguém morre, é só QA.'
   ];
+  
+  // americada
+  var af = [
+    'Passa a bola Mahomes!!!'
+  ];
 
   // phrases used by more than one person
   var misc = [
@@ -147,6 +152,10 @@ module.exports = function(robot) {
 
   robot.hear(/barbosada/i, function(msg) {
     sendMessage(msg, cb);
+  });
+  
+  robot.hear(/americada/i, function(msg) {
+    sendMessage(msg, af);
   });
 
   robot.hear(/\bpeço desculpa\b/i, function(msg) {
