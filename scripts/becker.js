@@ -155,7 +155,7 @@ module.exports = function(robot) {
   });
   
   robot.hear(/americada/i, function(msg) {
-    sendMessage(msg, cb);
+    sendMessage(msg, af);
   });
 
   robot.hear(/\bpeço desculpa\b/i, function(msg) {
